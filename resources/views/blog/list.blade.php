@@ -27,10 +27,11 @@
                 <td>{{ $blog->subject }}</td>
                 <td><a href="/blog/{{ $blog->id }}">{{ $blog->title }}</a></td>
                 <td>{{ $blog->updated_at }}</td>
-                <td><button type="botton" class="btn-btn-primary" onclick="location.href='/blog/edit/{{ $blog->id }}'">編集</button></td>
+                <td><a href="{{ route('edit', ['id' => $blog->id]) }}" class="btn btn-primary">編集</a></td>
+
                 <form method="POST" action="{{ route('delete', $blog->id) }}" onSubmit="return checkDelete()">
                 @csrf
-                <td><button type="submit" class="btn-btn-primary" onclick=>削除</button></td>
+                <td><button type="submit" class="btn btn-primary" onclick=>削除</button></td>
             </tr>
             @endforeach
         </table>
