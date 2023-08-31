@@ -35,6 +35,19 @@ Route::get('/blog/create', 'App\Http\Controllers\BlogController@showCreate')->na
 # スレッドを新規登録
 Route::post('/blog/store', 'App\Http\Controllers\BlogController@exeStore')->name('store');
 
+# 新規アカウント登録画面表示
+Route::get('/blog/signUp','App\Http\Controllers\BlogController@showSignUp')->name('signUp');
+
+# 新規アカウント登録
+// 改修中20230809
+Route::post('/blog/registration', 'App\Http\Controllers\BlogController@exeRegistration')->name('registration');
+
+# 既存アカウントログイン
+Route::get('/blog/login','App\Http\Controllers\BlogController@showLogin')->name('login');
+
+# ログアウト
+Route::get('/blog/logout','App\Http\Controllers\BlogController@Logout')->name('logout');
+
 # 詳細画面を表示
 Route::get('/blog/{id}', 'App\Http\Controllers\BlogController@showDetail')->name('show');
 # ブログに回答

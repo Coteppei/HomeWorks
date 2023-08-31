@@ -5,7 +5,10 @@ use illuminate\Http\Request;
 use App\Models\Blog;
 use App\Models\Reply;
 use App\Http\Requests\BlogRequest;
+use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\ReplyRequest;
+use App\Models\User;
+use Illuminate\Support\Facades\Session;
 
 
 class BlogController extends Controller{
@@ -19,9 +22,6 @@ class BlogController extends Controller{
     {
             // ブログテーブルのデータをすべて取得する
             $blogs = Blog::all();
-            // デバッグメソッド
-            // dd($blogs);
-
             // resourcesのblogディレクトリーのlistファイルに返す
             return view('blog.list', ['blogs' => $blogs]);
     }
@@ -48,21 +48,13 @@ class BlogController extends Controller{
     }
 
     /**
-     * 作業中_
      * 対象掲示板に返信
-     * @param int $id
-     * @return view
+     * @param int $id]
      */
     public function exeReply(ReplyRequest $request)
     {
         //
         $inputs = $request->all();
-        // $inputs['foreign_id'] = $inputs['blogId'];
-
-        // $blog = Blog::find($blogId);
-        // dd($inputs);
-        // $foreignId = $blog->id;
-
         \DB::beginTransaction();
         try {
             if ($request->hasFile('image')) {
@@ -95,7 +87,6 @@ class BlogController extends Controller{
      */
     public function exeStore(BlogRequest $request)
     {
-        // ブログのデータを受け取る
         $inputs = $request->all();
         \DB::beginTransaction();
         try {
@@ -110,13 +101,69 @@ class BlogController extends Controller{
             \DB::rollback();
             abort(500);
         }
-
-        //登録内容のデバッグコード
-        // dd($request->all());
-        // Blog::create();
-
         \Session::flash('err_msg', 'ブログを登録しました');
         return redirect(route('blogs'));
+    }
+
+    /**
+     * 新規アカウント登録画面を表示
+     * @param int $id
+     * @return view
+     */
+    public function showSignUp(){
+        return view('blog.signUp');
+    }
+
+    /**
+     * 新規アカウント登録画面を表示
+     * @param int $id
+     * @return view
+     */
+    public function exeRegistration(CreateUserRequest $request){
+        $inputs = $request->all();
+        \DB::beginTransaction();
+        try {
+            $user = User::Create($inputs);
+            \DB::commit();
+        } catch(\Throwable $e) {
+            \DB::rollback();
+            abort(500);
+        }
+        \Session::flash('err_msg', 'ユーザー登録しました。こんにちは' . $user->user_name . 'さん');
+        return redirect(route('blogs'));
+    }
+
+        // $data = $request->validated(); // バリデーションを通過したデータを取得
+
+        // ユーザーをデータベースに登録
+        // User::create([
+        //     'user_name' => $data['user_name'],
+        //     'password' => $data['password'],
+        // ]);
+
+        // // 登録完了メッセージなどをセッションに設定
+        // \Session::flash('success_msg', 'アカウントを登録しました');
+
+        // 登録後にどの画面にリダイレクトするかを設定
+
+
+    /**
+     * 既存アカウントログイン画面を表示
+     * @param int $id
+     * @return view
+     */
+    public function showlogin(){
+        return view('blog.login');
+    }
+
+    /**
+     * ログアウトする
+     * @param int $id
+     * @return view
+     */
+    public function logout(){
+        Session::flush();
+        return redirect('/');
     }
 
     /**
