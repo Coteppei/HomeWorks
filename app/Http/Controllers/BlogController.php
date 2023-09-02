@@ -5,6 +5,7 @@ use illuminate\Http\Request;
 use App\Models\Blog;
 use App\Models\Reply;
 use App\Http\Requests\BlogRequest;
+use App\Http\Requests\EditRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\ReplyRequest;
 use App\Models\User;
@@ -189,9 +190,8 @@ class BlogController extends Controller{
      * ブログ更新する
      * @return view
      */
-    public function exeUpdate(BlogRequest $request)
+    public function exeUpdate(EditRequest $request)
     {
-        //
         $inputs = $request->all();
         \DB::beginTransaction();
         try {

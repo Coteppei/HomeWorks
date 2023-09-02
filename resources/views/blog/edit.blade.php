@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
         <h2>編集フォーム</h2>
-        <form method="POST" action="{{ route('update') }}" onSubmit="return checkSubmit()">
+        <form method="POST" action="{{ route('update') }}" onSubmit="return editCheckSubmit()">
         @csrf
             <input type="hidden" name="id" value="{{ $blogs->id }}">
             <div class="form-group">
@@ -40,7 +40,7 @@
                     </div>
                 @endif
             </div>
-            <div class="mt-5">
+            <div class="mt-5 mb-5">
                 <a class="btn btn-secondary" href="{{ route('blogs') }}">
                     キャンセル
                 </a>
@@ -51,13 +51,4 @@
         </form>
     </div>
 </div>
-<script>
-function checkSubmit(){
-if(window.confirm('更新してよろしいですか？')){
-    return true;
-} else {
-    return false;
-}
-}
-</script>
 @endsection

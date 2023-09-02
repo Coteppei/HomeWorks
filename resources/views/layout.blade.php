@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>ブログ</title>
-    <link rel="stylesheet" href="/css/app.css">
-    <script src="/js/app.js" defer></script>
+    <title>宿題掲示板 ホームズワークス</title>
+    <link rel="stylesheet" href="{{asset('css/app.css')}}">
+    <link rel="stylesheet" href="{{asset('css/style.css')}}">
+    <script src="{{asset('/js/app.js')}}"></script>
+    <script src="{{asset('/js/main.js')}}"></script>
+    <link rel="icon" href="{{asset('homework_girl.ico')}}">
 </head>
 <body>
     <header>
