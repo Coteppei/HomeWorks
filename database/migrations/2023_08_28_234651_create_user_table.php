@@ -15,7 +15,7 @@ return new class extends Migration
         {
             $table->id();
             $table->string('user_name', 20);
-            $table->string('password', 15);
+            $table->string('password');
             // 改修中：とりあえずトークンを書いとく
             $table->rememberToken();
             $table->timestamps();

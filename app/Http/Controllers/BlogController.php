@@ -9,6 +9,7 @@ use App\Http\Requests\EditRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\ReplyRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
 
@@ -122,6 +123,9 @@ class BlogController extends Controller{
      */
     public function exeRegistration(CreateUserRequest $request){
         $inputs = $request->all();
+
+        // パスワードをハッシュ化
+        $inputs['password'] = Hash::make($inputs['password']);
         \DB::beginTransaction();
         try {
             $user = User::Create($inputs);
