@@ -24,6 +24,10 @@ class BlogController extends Controller{
     {
             // ブログテーブルのデータをすべて取得する
             $blogs = Blog::all();
+            if (!session()->has('id')) {
+                // 'id' キーがセッション内に存在する場合の処理
+                session()->put('user_name','ユーザー未登録');
+            }
             // resourcesのblogディレクトリーのlistファイルに返す
             return view('blog.list', ['blogs' => $blogs]);
     }
@@ -122,21 +126,22 @@ class BlogController extends Controller{
      * @return view
      */
     public function exeRegistration(CreateUserRequest $request){
-        $inputs = $request->all();
-
-        // パスワードをハッシュ化
-        $inputs['password'] = Hash::make($inputs['password']);
-        \DB::beginTransaction();
-        try {
-            $user = User::Create($inputs);
-            \DB::commit();
-        } catch(\Throwable $e) {
-            \DB::rollback();
-            abort(500);
-        }
-        \Session::flash('err_msg', 'ユーザー登録しました。こんにちは' . $user->user_name . 'さん');
-        return redirect(route('blogs'));
+    $inputs = $request->all();
+    // パスワードをハッシュ化
+    $inputs['password'] = Hash::make($inputs['password']);
+    \DB::beginTransaction();
+    try {
+        $user = User::Create($inputs);
+        session()->put('id',$user->id);
+        session()->put('user_name','ログインユーザー： ' . $user->user_name . 'さん');
+        \DB::commit();
+    } catch(\Throwable $e) {
+        \DB::rollback();
+        abort(500);
     }
+    \Session::flash('err_msg', 'ユーザー登録しました。こんにちは' . $user->user_name . 'さん');
+    return redirect(route('blogs'));
+}
 
         // $data = $request->validated(); // バリデーションを通過したデータを取得
 
