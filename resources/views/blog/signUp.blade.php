@@ -2,22 +2,30 @@
 @section('title', 'アカウント作成')
 @section('content')
 
-<form method="POST" action="{{ route('registration')}}">
+<form method="POST" action="{{ route('registration') }}">
     @csrf
     <div class="login-container">
         <h2>アカウント作成</h2>
+        {{-- 未入力および空白での入力時エラー出力 --}}
+        @if($errors->has('user_name'))
+            <p class="text-danger">{{ $errors->first('user_name') }}</p>
+            <p class="text-danger">{{ $errors->first('password') }}</p>
+        @endif
+        {{-- ユーザー名かパスワードもしくはその両方が間違っていた場合エラー出力 --}}
+        @if (session('err_msg'))
+            <p class="text-danger">{{session('err_msg')}}</p>
+            <p class="text-danger">{{session('err_msg_next')}}</p>
+        @endif
         <p style="margin-top: 30px;">以下の項目に登録するユーザー名とパスワードを入れてください</p>
         <div id="error-message" class="error-message" style="display: none; color: red;">
             <h4>ユーザー名とパスワードを入力してください。</h4>
         </div>
         <input class="user_name" type="text" id="user_name" name="user_name" placeholder="ユーザー名を入力してください">
         <input class="password" type="password" id="password" name="password" placeholder="パスワードを入力してください">
-
-
         <button type="submit" class="btn btn-primary login-button">
             登録
         </button>
-        <a href="">
+        <a class="mb-5" href="{{route('login')}}">
             既にアカウントをお持ちの方はこちら
         </a>
     </div>

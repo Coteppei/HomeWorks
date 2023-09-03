@@ -16,8 +16,8 @@ return new class extends Migration
             $table->id();
             $table->string('user_name', 20);
             $table->string('password');
-            // 改修中：とりあえずトークンを書いとく
-            $table->rememberToken();
+            $table->unique('user_name');                // ユーザー名の重複対応
+            // $table->rememberToken();                 // 必要に応じて実装予定
             $table->timestamps();
         });
     }

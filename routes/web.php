@@ -38,27 +38,29 @@ Route::post('/blog/store', 'App\Http\Controllers\BlogController@exeStore')->name
 # 新規アカウント登録画面表示
 Route::get('/blog/signUp','App\Http\Controllers\BlogController@showSignUp')->name('signUp');
 
-# 新規アカウント登録
-// 改修中20230809
+# 新規アカウント登録実行
 Route::post('/blog/registration', 'App\Http\Controllers\BlogController@exeRegistration')->name('registration');
 
-# 既存アカウントログイン
+# ログイン画面表示
 Route::get('/blog/login','App\Http\Controllers\BlogController@showLogin')->name('login');
 
-# ログアウト
+# ログイン実行
+Route::post('/blog/exelogin','App\Http\Controllers\BlogController@exeLogin')->name('exelogin');
+
+# ログアウト実行
 Route::get('/blog/logout','App\Http\Controllers\BlogController@Logout')->name('logout');
 
-# 詳細画面を表示
+# 詳細画面表示
 Route::get('/blog/{id}', 'App\Http\Controllers\BlogController@showDetail')->name('show');
-# ブログに回答
+# 回答の送信
 Route::post('/blog/reply', 'App\Http\Controllers\BlogController@exeReply')->name('reply');
 
 # 編集画面を表示
 Route::get('/blog/edit/{id}', 'App\Http\Controllers\BlogController@showEdit')->name('edit');
-# ブログを編集
+# 編集内容に更新処理を実行
 Route::post('/blog/update', 'App\Http\Controllers\BlogController@exeUpdate')->name('update');
 
-# ブログ削除
+# 投稿の削除
 Route::post('/blog/delete/{id}', 'App\Http\Controllers\BlogController@exeDelete')->name('delete');
 
 

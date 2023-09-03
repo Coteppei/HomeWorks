@@ -7,6 +7,7 @@ use App\Models\Reply;
 use App\Http\Requests\BlogRequest;
 use App\Http\Requests\EditRequest;
 use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\ReplyRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -55,7 +56,7 @@ class BlogController extends Controller{
 
     /**
      * 対象掲示板に返信
-     * @param int $id]
+     * @param int $id
      */
     public function exeReply(ReplyRequest $request)
     {
@@ -76,7 +77,6 @@ class BlogController extends Controller{
         \Session::flash('err_msg', '対象の質問に回答しました');
         return redirect(route('blogs'));
     }
-
 
     /**
      * ブログ登録画面を表示する
@@ -121,7 +121,7 @@ class BlogController extends Controller{
     }
 
     /**
-     * 新規アカウント登録画面を表示
+     * 新規アカウントを登録
      * @param int $id
      * @return view
      */
@@ -137,11 +137,13 @@ class BlogController extends Controller{
         \DB::commit();
     } catch(\Throwable $e) {
         \DB::rollback();
-        abort(500);
+        \Session::flash('err_msg', 'すでに同名のユーザーが存在します。');
+        \Session::flash('err_msg_next', '別のユーザー名で登録してください。🙇');
+        return redirect(route('signUp'));
     }
     \Session::flash('err_msg', 'ユーザー登録しました。こんにちは' . $user->user_name . 'さん');
     return redirect(route('blogs'));
-}
+    }
 
         // $data = $request->validated(); // バリデーションを通過したデータを取得
 
@@ -156,7 +158,6 @@ class BlogController extends Controller{
 
         // 登録後にどの画面にリダイレクトするかを設定
 
-
     /**
      * 既存アカウントログイン画面を表示
      * @param int $id
@@ -164,6 +165,26 @@ class BlogController extends Controller{
      */
     public function showlogin(){
         return view('blog.login');
+    }
+    /**
+     * ログイン機能
+     * @param int $id
+     */
+    public function exelogin(LoginRequest $request){
+        // ユーザー名とパスワードを取得
+            $user_name = $request->input('user_name');
+            $password = $request->input('password');
+        // ユーザー名を取得
+        $user = User::where('user_name', $user_name)->first();
+        if ($user && password_verify($password, $user->password)) {
+            session()->put('id',$user->id);
+            session()->put('user_name','ログインユーザー： ' . $user->user_name . 'さん');
+            return redirect(route('blogs'));
+        } else {
+            \Session::flash('err_msg', 'ログインに失敗しました。');
+            \Session::flash('err_msg_next', 'もう一度、ご確認の上各情報を入力ください。🙇');
+            return redirect(route('login'));
+        }
     }
 
     /**
