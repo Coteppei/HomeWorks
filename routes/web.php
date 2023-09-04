@@ -13,22 +13,11 @@
 // |
 // */
 
-
-
-# ブログ一覧を表示
-# -> で名前が付けれる
-// Route::get('/','BlogController@showList')->name('blogs');
-
-#ただハローワールドを表示させるためのプログラム
-
-// use App\Http\Controllers\HelloWorldController;
-
-// Route::get('/', [HelloWorldController::class, 'index']);
-
-
 # ブログ一覧を表示
 // 一番最初に開いた画面で表示
 Route::get('/', 'App\Http\Controllers\BlogController@showList')->name('blogs');
+# キーワード検索
+Route::get('/search', 'App\Http\Controllers\BlogController@search')->name('search');
 
 # 新規登録画面を表示
 Route::get('/blog/create', 'App\Http\Controllers\BlogController@showCreate')->name('create');
@@ -62,12 +51,3 @@ Route::post('/blog/update', 'App\Http\Controllers\BlogController@exeUpdate')->na
 
 # 投稿の削除
 Route::post('/blog/delete/{id}', 'App\Http\Controllers\BlogController@exeDelete')->name('delete');
-
-
-
-
-
-
-
-
-

@@ -1,6 +1,10 @@
 @extends('layout')
 @section('title', 'ブログ投稿')
 @section('content')
+@php
+    $subjects = config('arrays.subjects');
+    $schools = config('arrays.schools');
+@endphp
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
         <h2>新規投稿フォーム</h2>
@@ -13,9 +17,6 @@
                     学生カテゴリー
                 </label>
                 <br>
-                @php
-                $schools = ['小学生', '中学生', '高校生', '大学生'];
-                @endphp
                 @foreach ($schools as $school)
                     <input
                         id="{{ $school }}"
@@ -37,9 +38,6 @@
                 </label>
             </div>
             <div class="form-group">
-                @php
-                $subjects = ['国語', '算数', '数学', '理科', '社会', '英語', '自由研究', '論文', 'その他'];
-                @endphp
                 <select name="subject">
                 @foreach ($subjects as $subject)
                 <option
@@ -103,51 +101,8 @@
                     キャンセル
                 </a>
                 <button type="submit" class="btn btn-primary">投稿する</button>
-                {{-- 改修予定-モーダルで新規投稿か確認する --}}
-                {{-- <button type="submit" class="btn btn-primary" button id="showModal">投稿する</button> --}}
-                {{-- 20230902メモ：モーダル出さないでログイン画面へ遷移でもよいかも。そこに注意文言を出すようにして！ --}}
-                <div id="myModal" class="modal">
-                    <div class="login-modal-content">
-                        <p>問題を投稿する場合はアカウントを新規登録するかログインしてください。</p>
-                        <br>
-                            <tr>
-                                <th>アカウント登録をしていない方</th>
-                            </tr>
-                            <tr>
-                                <td><button class="modal-button btn btn-primary" onclick="window.location.href='register.html'">新規登録</button></td>
-                            </tr>
-                            <tr>
-                                <th>アカウント登録済みの方</th>
-                            </tr>
-                            <tr>
-                                <td><button class="modal-button btn btn-primary" onclick="window.location.href='login.html'">ログイン</button></td>
-                            </tr>
-                            <br>
-                            <button class="modal-button" onclick="closeModal()">戻る</button>
-                    </div>
-                </div>
-                <div id="overlay" class="overlay"></div>
             </div>
         </form>
     </div>
 </div>
-
-{{-- モーダル用のjs一旦コメントアウト --}}
-
-{{-- <script>
-document.getElementById("showModal").addEventListener("click", function() {
-    const modal = document.getElementById("myModal");
-    modal.style.display = "block";
-    const overlay = document.getElementById("overlay");
-    modal.style.display = "block";
-    overlay.style.display = "block";
-});
-function closeModal() {
-    const modal = document.getElementById("myModal");
-    modal.style.display = "none";
-    const overlay = document.getElementById("overlay");
-    modal.style.display = "none";
-    overlay.style.display = "none";
-}
-</script> --}}
 @endsection

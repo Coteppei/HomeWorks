@@ -5,6 +5,7 @@ use illuminate\Http\Request;
 use App\Models\Blog;
 use App\Models\Reply;
 use App\Http\Requests\BlogRequest;
+use App\Http\Requests\SearchRequest;
 use App\Http\Requests\EditRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\LoginRequest;
@@ -43,7 +44,6 @@ class BlogController extends Controller{
         // ブログテーブルのidデータのみを取得する
         $blogs = Blog::find($id);
         $replies = Reply::where('foreign_id', $foreign_id)->get();
-
         // ブログテーブルが存在しないとき、
         if (is_null($blogs)) {
             // セッションの作成
@@ -55,12 +55,37 @@ class BlogController extends Controller{
     }
 
     /**
+     * 検索結果を表示
+     * @param int $id
+     * @return view
+     */
+    public function search(SearchRequest $request)
+    {
+        $keyword = $request->input('search'); // リクエストからキーワードを取得
+        if ($request->has('search')) {
+            $keyword .=  ' ' . $request->input('search_sub');
+        }
+        $keyword = mb_convert_kana($keyword, 's'); // スペースを正規化
+        $keywords = preg_split('/\s+/', $keyword); // 正規表現でスペースで区切る
+        $query = Blog::query();
+        foreach ($keywords as $kw) {
+            $query->where(function ($query) use ($kw) {
+                $query->where('title', 'LIKE', '%' . $kw . '%')
+                    ->orWhere('content', 'LIKE', '%' . $kw . '%')
+                    ->orWhere('school', $kw)
+                    ->orWhere('subject', $kw);
+            });
+        }
+        $blogs = $query->get();
+        return view('blog.list', ['blogs' => $blogs]);
+    }
+
+    /**
      * 対象掲示板に返信
      * @param int $id
      */
     public function exeReply(ReplyRequest $request)
     {
-        //
         $inputs = $request->all();
         \DB::beginTransaction();
         try {
@@ -100,6 +125,7 @@ class BlogController extends Controller{
                 $imagePath = $request->file('image')->store('image', 'public');
                 $inputs['image_path'] = $imagePath;
             }
+            $inputs['login_user_id'] = session()->get('id');
             // ブログを登録
             Blog::create($inputs);
             \DB::commit();
@@ -144,19 +170,6 @@ class BlogController extends Controller{
     \Session::flash('err_msg', 'ユーザー登録しました。こんにちは' . $user->user_name . 'さん');
     return redirect(route('blogs'));
     }
-
-        // $data = $request->validated(); // バリデーションを通過したデータを取得
-
-        // ユーザーをデータベースに登録
-        // User::create([
-        //     'user_name' => $data['user_name'],
-        //     'password' => $data['password'],
-        // ]);
-
-        // // 登録完了メッセージなどをセッションに設定
-        // \Session::flash('success_msg', 'アカウントを登録しました');
-
-        // 登録後にどの画面にリダイレクトするかを設定
 
     /**
      * 既存アカウントログイン画面を表示

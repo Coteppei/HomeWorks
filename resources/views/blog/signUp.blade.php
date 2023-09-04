@@ -9,6 +9,8 @@
         {{-- 未入力および空白での入力時エラー出力 --}}
         @if($errors->has('user_name'))
             <p class="text-danger">{{ $errors->first('user_name') }}</p>
+        @endif
+        @if ($errors->has('password'))
             <p class="text-danger">{{ $errors->first('password') }}</p>
         @endif
         {{-- ユーザー名かパスワードもしくはその両方が間違っていた場合エラー出力 --}}

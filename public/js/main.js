@@ -1,4 +1,24 @@
-//
+
+document.addEventListener("DOMContentLoaded", function () {
+    const openModalButton = document.getElementById("showModal");
+    const closeModalButton = document.getElementById("closeModal");
+    const modalContainer = document.getElementById("myModal");
+
+    openModalButton.addEventListener("click", function () {
+        modalContainer.style.display = "block";
+    });
+
+    closeModalButton.addEventListener("click", function () {
+        modalContainer.style.display = "none";
+    });
+
+    window.addEventListener("click", function (event) {
+        if (event.target === modalContainer) {
+            modalContainer.style.display = "none";
+        }
+    });
+});
+
 
 
 // アカウント作成の登録ボタン
@@ -88,3 +108,4 @@ function checkDelete(){
         return false;
     }
 }
+

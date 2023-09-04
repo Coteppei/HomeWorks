@@ -20,6 +20,7 @@ class Blog extends Model
     [
         'school',
         'subject',
+        'login_user_id',
         'title',
         'content',
         'image_path',
