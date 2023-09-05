@@ -3,6 +3,18 @@
 @section('content')
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
+                @if (session()->has('id') && session('id') === $blogs->login_user_id)
+                    <div class="btn-group">
+                        <form method="GET" action="{{ route('edit', [$blogs->id]) }}">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">本投稿を編集する</button>
+                        </form>
+                        <form method="POST" action="{{ route('delete', [$blogs->id]) }}" onSubmit="return checkDelete()">
+                            @csrf
+                            <button type="submit" class="btn btn-danger ml-5 mb-5">本投稿を削除する</button>
+                        </form>
+                    </div>
+                @endif
         <h2>{{$blogs->title}}</h2>
         {{-- 日付を表示する --}}
         <p>質問者投稿日：{{$blogs->created_at}}</p>
@@ -43,9 +55,6 @@
             id="image"
         >
     <div class="mt-5">
-        <a class="btn btn-secondary" href="{{ route('blogs') }}">
-            掲示板トップに戻る
-        </a>
         <button type="submit" class="btn btn-primary" >
             投稿する
         </button>
@@ -64,6 +73,9 @@
                     <img src="{{ asset('storage/' . $reply->image_path) }}" alt="Image"  width="200px">
                 </div>
             </a>
+            @if (session()->has('id') && session('id') === $blogs->login_user_id)
+
+            @endif
         @endforeach
         <hr>
         <a class="btn btn-secondary mt-2 mb-5" href="{{ route('blogs') }}">

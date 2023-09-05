@@ -11,7 +11,7 @@
         <h2>宿題一覧</h2>
         @if (session('err_msg'))
             <p class="text-danger">
-                {{session('err_msg')}}
+                {{ session('err_msg') }}
             </p>
         @endif
         <form action="{{ route('search') }}" method="GET">
