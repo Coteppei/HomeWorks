@@ -13,6 +13,7 @@ use App\Http\Requests\ReplyRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 
 class BlogController extends Controller{
@@ -24,14 +25,12 @@ class BlogController extends Controller{
    */
     public function showList()
     {
-            // ブログテーブルのデータをすべて取得する
-            $blogs = Blog::all();
-            if (!session()->has('id')) {
-                // 'id' キーがセッション内に存在する場合の処理
-                session()->put('user_name','ユーザー未登録');
-            }
-            // resourcesのblogディレクトリーのlistファイルに返す
-            return view('blog.list', ['blogs' => $blogs]);
+        if (!session()->has('id')) {
+            session()->put('user_name', 'ユーザー未登録');
+        }
+        // created_atで降順に並べ替えてページネーションを5ページで適用
+        $blogs = DB::table('blogs')->orderBy('created_at', 'desc')->simplepaginate(5);
+        return view('blog.list', ['blogs' => $blogs]);
     }
     /**
      * ブログ詳細を表示
@@ -76,8 +75,10 @@ class BlogController extends Controller{
                     ->orWhere('subject', $kw);
             });
         }
-        $blogs = $query->get();
-        return view('blog.list', ['blogs' => $blogs]);
+        // created_atで降順に並べ替えてページネーションを5ページで適用
+        $blogs = $query->orderBy('created_at', 'desc')->simplepaginate(5);
+        // ブログと検索キーワードをページネーション用に取得
+        return view('blog.list', ['blogs' => $blogs, 'keyword' => $keyword]);
     }
 
     /**

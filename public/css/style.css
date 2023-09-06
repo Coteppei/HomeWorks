@@ -52,3 +52,16 @@
     margin: 0 auto;
     max-width: 100%;
 }
+
+/* スムーススクロールの実装 */
+html {
+    scroll-behavior: smooth;
+}
+.scroll-button {
+    position: fixed;
+    bottom: 20px;
+    right: 10px;
+}
+.scroll-image {
+    height: 50px;
+}

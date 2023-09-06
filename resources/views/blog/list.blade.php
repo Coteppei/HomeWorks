@@ -15,7 +15,6 @@
             </p>
         @endif
         <form action="{{ route('search') }}" method="GET">
-            @csrf
             <div class="form-group">
                 <h4>カテゴリー検索</h4>
                 <label for="school">
@@ -59,7 +58,6 @@
             <button type="submit" class="btn btn-primary">検索</button>
         </form>
         <form action="{{ route('search') }}" method="GET">
-            @csrf
             <div class="form-group">
                 <label for="search">キーワード検索</label>
                     <input type="text" class="form-control" id="search" name="search" placeholder="キーワードを入力してください">
@@ -95,6 +93,14 @@
         </table>
     </div>
 </div>
+{{-- ページネーション表示 検索の有無で条件分岐 --}}
+<div class="mb-5">
+    @if (isset($keyword))
+        {{ $blogs->appends(['search' => $keyword])->links() }}
+    @else
+        {{ $blogs->links() }}
+    @endif
+</div>
+<p id="scrollButton" class="scroll-button" ><a href="#"><img class="scroll-image" src="{{asset('upScroll.png')}}" alt=""></a></p>
+
 @endsection
-
-
