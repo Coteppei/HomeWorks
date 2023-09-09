@@ -3,24 +3,26 @@
 @section('content')
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-                @if (session()->has('id') && session('id') === $blogs->login_user_id)
-                    <div class="btn-group">
-                        <form method="GET" action="{{ route('edit', [$blogs->id]) }}">
-                            @csrf
-                            <button type="submit" class="btn btn-primary">本投稿を編集する</button>
-                        </form>
-                        <form method="POST" action="{{ route('delete', [$blogs->id]) }}" onSubmit="return checkDelete()">
-                            @csrf
-                            <button type="submit" class="btn btn-danger ml-5 mb-5">本投稿を削除する</button>
-                        </form>
-                    </div>
-                @endif
+        {{-- ログインユーザーが投稿した記事の場合、編集と削除ボタンを表示 --}}
+        <div class="btn-group">
+            @if (session()->has('id') && session('id') === $blogs->login_user_id)
+                <form method="GET" action="{{ route('edit', [$blogs->id]) }}">
+                    <button type="submit" class="btn btn-primary">本投稿を編集する</button>
+                </form>
+                <form method="POST" action="{{ route('delete', [$blogs->id]) }}" onSubmit="return checkDelete()">
+                    @csrf
+                    <button type="submit" class="btn btn-danger ml-5 mb-5 mr-5">本投稿を削除する</button>
+                </form>
+            @endif
+        </div>
         <h2>{{$blogs->title}}</h2>
         {{-- 日付を表示する --}}
         <p>質問者投稿日：{{$blogs->created_at}}</p>
         <a href="#" data-toggle="modal" data-target="#imageModal">
             <div class="images">
-                <img src="{{ asset('storage/' . $blogs->image_path) }}" alt="Image"  width="500px">
+                @if ($blogs->image_path !== null)
+                    <img src="{{ asset('storage/' . $blogs->image_path) }}" alt="Image"  width="100%">
+                @endif
             </div>
         </a>
         <div style="overflow: auto; max-height: 300px;"> <!-- スクロール可能なコンテンツの領域 -->
@@ -29,7 +31,6 @@
         </div>
     </div>
 </div>
-
 
 <h3 class="mt-3 mb-3">回答・コメントを投稿する</h3>
 <form method="POST" action="{{ route('reply',['foreign_id' => $blogs->id]) }}" onSubmit="return checkSubmit()" enctype="multipart/form-data">
@@ -55,8 +56,11 @@
             id="image"
         >
     <div class="mt-5">
-        <button type="submit" class="btn btn-primary" >
+        <button type="submit" class="btn btn-primary mr-5" >
             投稿する
+        </button>
+        <button type="button" id="copyButton" class="btn btn-primary">
+            この記事のリンクをコピー
         </button>
     </div>
 </form>
@@ -65,17 +69,19 @@
     <div class="col-md-8 col-md-offset-2">
         @foreach ($replies as $reply)
             <hr>
-            <p>回答者返答日：{{$reply->created_at}}</p>
-            <p>{{$reply->content}}</p>
+                <div>
+                    <p class="small-text side-text">回答者返答日：</p>
+                    <p class="small-text side-text">{{$reply->created_at}}</p>
+                    <p>{{$reply->content}}</p>
+                </div>
             {{-- 画像登録 --}}
             <a href="#" data-toggle="modal" data-target="#imageModal">
                 <div class="images">
-                    <img src="{{ asset('storage/' . $reply->image_path) }}" alt="Image"  width="200px">
+                    @if ($reply->image_path !== null)
+                        <img src="{{ asset('storage/' . $reply->image_path) }}" alt="Image"  width="200px">
+                    @endif
                 </div>
             </a>
-            @if (session()->has('id') && session('id') === $blogs->login_user_id)
-
-            @endif
         @endforeach
         <hr>
         <a class="btn btn-secondary mt-2 mb-5" href="{{ route('blogs') }}">
@@ -84,8 +90,6 @@
     </div>
 </div>
 <!-- 画像拡大用モーダル -->
-{{-- スマホ対応は今後実施予定 --}}
-
 <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

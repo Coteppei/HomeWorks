@@ -1,0 +1,6 @@
+/* 簡易的スマホ判定 */
+@media (max-width: 767px) {
+    .click-range:hover {
+        background-color: transparent;
+    }
+}

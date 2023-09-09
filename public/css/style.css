@@ -46,6 +46,7 @@
     width: 30%;
     margin-bottom: 50px;
 }
+
 /* スレッドを開いた時の画像モーダル調整 */
 .center-image {
     display: block;
@@ -63,5 +64,42 @@ html {
     right: 10px;
 }
 .scroll-image {
-    height: 50px;
+    height: 70px;
+    opacity: 0.5;
+}
+
+/* カテゴリー検索のスペース */
+.category-search th,
+.category-search td {
+    width: 135px;
+}
+
+/* 宿題投稿の記事部分 */
+.click-range{
+    cursor: hand;
+    cursor:pointer;
+}
+.click-range:hover {
+    background-color: #FFFFEE;
+}
+
+.small-text {
+    font-size: 10px;
+    color: #b3b3b3;
+}
+.main-text {
+    font-size: 15px;
+    color: #000080;
+}
+
+.side-text {
+    display: inline-block;
+}
+
+/* 選択コマンドの色を変更 */
+.link-color {
+    color: #EEEEEE !important;
+}
+.link-color:hover {
+    color: #88FFFF !important;
 }

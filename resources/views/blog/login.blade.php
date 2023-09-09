@@ -5,6 +5,7 @@
     @csrf
     <div class="login-container">
         <h2>ログイン</h2>
+        <p class="mt-4">以下の項目に登録したユーザー名とパスワードを入れてください</p>
         {{-- 未入力および空白での入力時エラー出力 --}}
         @if($errors->has('user_name'))
             <p class="text-danger">{{ $errors->first('user_name') }}</p>
@@ -17,8 +18,8 @@
             <p class="text-danger">{{session('err_msg')}}</p>
             <p class="text-danger">{{session('err_msg_next')}}</p>
         @endif
-        <input class="user_name" type="text" name="user_name" placeholder="ユーザー名を入力してください" >
-        <input class="password" type="password" name="password" placeholder="パスワードを入力してください" >
+        <input class="user_name" type="text" name="user_name" placeholder="ユーザー名" >
+        <input class="password" type="password" name="password" placeholder="パスワード" >
         <button type="submit" class="btn btn-primary login-button" >
             ログイン
         </button>

@@ -1,4 +1,4 @@
-
+// ログイン前に新規登録ボタンを押したときログインまたはアカウント作成のモーダル表示
 document.addEventListener("DOMContentLoaded", function () {
     const openModalButton = document.getElementById("showModal");
     const closeModalButton = document.getElementById("closeModal");
@@ -109,3 +109,19 @@ function checkDelete(){
     }
 }
 
+// 対象記事のリンクコピーの処理
+function copyToClipboard(text) {
+    const tempInput = document.createElement("input");
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.body.removeChild(tempInput);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("copyButton").addEventListener("click", function() {
+        const currentUrl = window.location.href;
+        copyToClipboard(currentUrl);
+        alert("リンクがコピーされました: " + currentUrl);
+    });
+});

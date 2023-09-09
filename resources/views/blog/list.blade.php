@@ -7,28 +7,47 @@
     $schools = config('arrays.schools');
 @endphp
 <div class="row">
-    <div class="col-md-10 col-md-offset-2">
-        <h2>宿題一覧</h2>
+    <div class="col-md-12 col-md-offset-2">
         @if (session('err_msg'))
             <p class="text-danger">
                 {{ session('err_msg') }}
             </p>
         @endif
         <form action="{{ route('search') }}" method="GET">
-            <div class="form-group">
+            <div class="form-group mb-5">
                 <h4>カテゴリー検索</h4>
-                <label for="school">
-                    学生カテゴリー
-                </label>
-                <br>
-                <select name="search">
-                    @foreach ($schools as $school)
-                        <option
-                        id="{{ $school }}"
-                        value="{{ $school }}"
-                        >{{ $school }}</option>
-                    @endforeach
-                </select>
+                <table class="category-search">
+                    <tr>
+                        <th>学生カテゴリー</th>
+                        <th>教科目カテゴリー</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select name="search">
+                                @foreach ($schools as $school)
+                                    <option
+                                    id="{{ $school }}"
+                                    value="{{ $school }}"
+                                    >{{ $school }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <select name="search_sub">
+                                @foreach ($subjects as $subject)
+                                    <option
+                                        id="{{ $subject }}"
+                                        value="{{ $subject }}"
+                                    >{{ $subject }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-sm btn-primary">検索</button>
+                        </td>
+                    </tr>
+                </table>
                 @if ($errors->has('school'))
                     <div class="text-danger">
                         {{ $errors->first('school') }}
@@ -36,70 +55,67 @@
                 @endif
             </div>
             <div class="form-group mb-1">
-                <label for="subject">
-                    教科目カテゴリー
-                </label>
             </div>
             <div class="form-group">
-                <select name="search_sub">
-                    @foreach ($subjects as $subject)
-                        <option
-                            id="{{ $subject }}"
-                            value="{{ $subject }}"
-                        >{{ $subject }}</option>
-                    @endforeach
-                </select>
                 @if ($errors->has('subject'))
                     <div class="text-danger">
                         {{ $errors->first('subject') }}
                     </div>
                 @endif
             </div>
-            <button type="submit" class="btn btn-primary">検索</button>
         </form>
-        <form action="{{ route('search') }}" method="GET">
-            <div class="form-group">
-                <label for="search">キーワード検索</label>
-                    <input type="text" class="form-control" id="search" name="search" placeholder="キーワードを入力してください">
-                    <button type="submit" class="btn btn-primary">検索</button>
-            </div>
-        </form>
-        <form action="{{ route('blogs') }}" method="POST">
-            <button type="submit" class="btn btn-primary mb-4">検索のリセット</button>
-        </form>
-        <table class="table table-striped">
-            <tr>
-                <th>学生カテゴリー</th>
-                <th>教科目カテゴリー</th>
-                <th>タイトル</th>
-                <th></th>
-                <th></th>
-            </tr>
-            @foreach ($blogs as $blog)
-                <tr onclick="location.href='{{ route('show', ['id' => $blog->id]) }}'">
-                    <td>{{ $blog->school }}</td>
-                    <td>{{ $blog->subject }}</td>
-                    <td><a href="{{ route('show', ['id' => $blog->id]) }}">{{ $blog->title }}</a></td>
-                    <td><a href="{{ route('edit', ['id' => $blog->id]) }}" class="btn btn-primary">編集</a></td>
-                    <td>
-                        <form method="POST" action="{{ route('delete', ['id' => $blog->id]) }}" onSubmit="return checkDelete()">
-                            @csrf
-                            <button type="submit" class="btn btn-primary">削除</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
+        <h4>キーワード検索</h4>
+        <div class="form-group">
+            <form action="{{ route('search') }}" method="GET">
+                <input type="text" class="form-control mb-4" id="search" name="search" placeholder="キーワードを入力してください">
+                <button type="submit" class="btn btn-primary float-right">検索</button>
             </form>
-        </table>
+        </div>
+        <form action="{{ route('blogs') }}" method="POST">
+            <button type="submit" class="btn btn-danger mt-5 mb-5">検索のリセット</button>
+        </form>
+
+        {{-- 改修中 --}}
+        <h1 class="homewormb-5 text-center">宿題一覧</h1>
+        @isset($keyword)
+            <div class="text-center">
+                <p class="side-text">検索ワード：</p>
+                <b><p class="side-text ">{{ $keyword }}</p>
+            </div>
+        @endisset
+        @foreach ($blogs as $blog)
+        <hr color="#808080">
+            <div class="click-range" onclick="location.href='{{ route('show', ['id' => $blog->id]) }}'">
+                {{-- 投稿時間 --}}
+                <p class="small-text side-text mb-1">学生カテゴリー：</p>
+                <p class="small-text side-text mr-3">{{ $blog->school }}</p>
+                {{-- 教科目カテゴリー --}}
+                <p class="small-text side-text">教科目カテゴリー：</p>
+                <p class="small-text side-text mr-3">{{ $blog->subject }}</p>
+                <b>
+                    <p class="main-text">{{ $blog->title }}</p>
+                </b>
+                {{-- 記事の内容 --}}
+                {{-- 一行にまとめる --}}
+                <div>
+                    {{-- 学生カテゴリー --}}
+
+                    <p class="small-text side-text mb-1">投稿日：</p>
+                    <p class="small-text side-text mb-1">{{ $blog->created_at }}</p>
+                </div>
+            </div>
+        @endforeach
+        <hr color="#808080">
     </div>
 </div>
+
 {{-- ページネーション表示 検索の有無で条件分岐 --}}
 <div class="mb-5">
-    @if (isset($keyword))
+    @isset($keyword)
         {{ $blogs->appends(['search' => $keyword])->links() }}
     @else
         {{ $blogs->links() }}
-    @endif
+    @endisset
 </div>
 <p id="scrollButton" class="scroll-button" ><a href="#"><img class="scroll-image" src="{{asset('upScroll.png')}}" alt=""></a></p>
 
