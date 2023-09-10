@@ -20,7 +20,7 @@ Route::get('/', 'App\Http\Controllers\BlogController@showList')->name('blogs');
 Route::get('/search', 'App\Http\Controllers\BlogController@search')->name('search');
 
 # 新規登録画面を表示
-Route::get('/blog/create', 'App\Http\Controllers\BlogController@showCreate')->name('create');
+Route::post('/blog/create', 'App\Http\Controllers\BlogController@showCreate')->name('create');
 # スレッドを新規登録
 Route::post('/blog/store', 'App\Http\Controllers\BlogController@exeStore')->name('store');
 
