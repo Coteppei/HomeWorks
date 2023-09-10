@@ -15,17 +15,18 @@
                 </form>
             @endif
         </div>
+        {{-- タイトルから順に常時表示 --}}
         <h2>{{$blogs->title}}</h2>
-        {{-- 日付を表示する --}}
         <p>質問者投稿日：{{$blogs->created_at}}</p>
-        <a href="#" data-toggle="modal" data-target="#imageModal">
-            <div class="images">
-                @if ($blogs->image_path !== null)
+        {{-- 画像投稿がある時のみ画像を表示 --}}
+        @if ($blogs->image_path !== null)
+            <a href="#" data-toggle="modal" data-target="#imageModal">
+                <div class="images">
                     <img src="{{ asset('storage/' . $blogs->image_path) }}" alt="Image"  width="100%">
-                @endif
-            </div>
-        </a>
-        <div style="overflow: auto; max-height: 300px;"> <!-- スクロール可能なコンテンツの領域 -->
+                </div>
+            </a>
+        @endif
+        <div style="overflow: auto; max-height: 300px;">
             <h4 class="mt-4">詳細説明</h4>
             <p>{{$blogs->content}}</p>
         </div>
@@ -67,7 +68,13 @@
 <h3 class="mt-5">回答・コメントを確認する</h3>
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
+        @php
+            $photo_id = 0;
+        @endphp
         @foreach ($replies as $reply)
+            @php
+                $photo_id += 1;
+            @endphp
             <hr>
                 <div>
                     <p class="small-text side-text">回答者返答日：</p>
@@ -75,13 +82,13 @@
                     <p>{{$reply->content}}</p>
                 </div>
             {{-- 画像登録 --}}
-            <a href="#" data-toggle="modal" data-target="#imageModal">
-                <div class="images">
-                    @if ($reply->image_path !== null)
+            @if ($reply->image_path !== null)
+                <a href="#" data-toggle="modal" data-target="#imageModal{{ $photo_id }}">
+                    <div class="images">
                         <img src="{{ asset('storage/' . $reply->image_path) }}" alt="Image"  width="200px">
-                    @endif
-                </div>
-            </a>
+                    </div>
+                </a>
+            @endif
         @endforeach
         <hr>
         <a class="btn btn-secondary mt-2 mb-5" href="{{ route('blogs') }}">
@@ -89,14 +96,34 @@
         </a>
     </div>
 </div>
-<!-- 画像拡大用モーダル -->
-<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel">
+<!-- 投稿画像を表示する -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel1">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-body text-center">
-                <img src="{{ asset('storage/' . $blogs->image_path) }}" alt="Image" class="center-image" id="modalImage" width="1000px">
+                <img src="{{ asset('storage/' . $blogs->image_path) }}" alt="Image" class="center-image" id="modalImage1" width="1000px">
             </div>
         </div>
     </div>
 </div>
+<!-- 返信で添付された画像がある場合、その画像をモーダル表示 -->
+@isset($reply)
+@php
+    $photo_id = 0;
+@endphp
+@foreach ($replies as $reply)
+@php
+    $photo_id += 1;
+@endphp
+<div class="modal fade" id="imageModal{{ $photo_id }}" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel2">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img src="{{ asset('storage/' . $reply->image_path) }}" alt="Image" class="center-image" id="modalImage2" width="1000px">
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+@endisset
 @endsection

@@ -39,10 +39,9 @@ class BlogController extends Controller{
      */
     public function showDetail($id)
     {
-        $foreign_id = $id;
         // ブログテーブルのidデータのみを取得する
         $blogs = Blog::find($id);
-        $replies = Reply::where('foreign_id', $foreign_id)->get();
+        $replies = Reply::where('foreign_id', $id)->get();
         // ブログテーブルが存在しないとき、
         if (is_null($blogs)) {
             // セッションの作成
@@ -143,7 +142,8 @@ class BlogController extends Controller{
      * @param int $id
      * @return view
      */
-    public function showSignUp(){
+    public function showSignUp()
+    {
         return view('blog.signUp');
     }
 
@@ -152,7 +152,8 @@ class BlogController extends Controller{
      * @param int $id
      * @return view
      */
-    public function exeRegistration(CreateUserRequest $request){
+    public function exeRegistration(CreateUserRequest $request)
+    {
     $inputs = $request->all();
     // パスワードをハッシュ化
     $inputs['password'] = Hash::make($inputs['password']);
@@ -177,14 +178,16 @@ class BlogController extends Controller{
      * @param int $id
      * @return view
      */
-    public function showlogin(){
+    public function showlogin()
+    {
         return view('blog.login');
     }
     /**
      * ログイン機能
      * @param int $id
      */
-    public function exelogin(LoginRequest $request){
+    public function exelogin(LoginRequest $request)
+    {
         // ユーザー名とパスワードを取得
             $user_name = $request->input('user_name');
             $password = $request->input('password');
@@ -206,7 +209,8 @@ class BlogController extends Controller{
      * @param int $id
      * @return view
      */
-    public function logout(){
+    public function logout()
+    {
         Session::flush();
         return redirect('/');
     }
@@ -229,7 +233,6 @@ class BlogController extends Controller{
             }
             return view('blog.edit', ['blogs' => $blogs]);
     }
-
     /**
      * ブログ更新する
      * @return view

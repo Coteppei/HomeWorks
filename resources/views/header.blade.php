@@ -7,7 +7,10 @@
         <div class="navbar-nav">
             <a class="nav-item nav-link link-color" href="{{ route('blogs') }}">宿題一覧<span class="sr-only"></span></a>
             @if (session()->has('id'))
-                <a class="nav-item nav-link link-color" href="{{ route('create') }}">新規投稿</a>
+            <form id="createForm" action="{{ route('create') }}" method="POST">
+                @csrf
+                <a id="createLink" class="nav-item nav-link link-color" href="#">新規投稿</a>
+            </form>
             @else
                 <a class="nav-item nav-link link-color" href="#" id="showModal">新規投稿</a>
             @endif

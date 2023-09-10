@@ -44,9 +44,12 @@
                 <a class="btn btn-secondary" href="{{ route('blogs') }}">
                     キャンセル
                 </a>
-                <button type="submit" class="btn btn-primary">
-                    更新する
-                </button>
+                {{-- 外部ユーザー対策 --}}
+                @if (session('id') === $blogs->login_user_id)
+                    <button type="submit" class="btn btn-primary">
+                        更新する
+                    </button>
+                @endif
             </div>
         </form>
     </div>

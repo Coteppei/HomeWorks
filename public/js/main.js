@@ -19,8 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
-
 // アカウント作成の登録ボタン
 function showConfirmation() {
     const userName = document.getElementById('user_name').value;
@@ -123,5 +121,13 @@ document.addEventListener("DOMContentLoaded", function() {
         const currentUrl = window.location.href;
         copyToClipboard(currentUrl);
         alert("リンクがコピーされました: " + currentUrl);
+    });
+});
+
+// 新規登録画面のhref属性のリンク制御かつフォーム送信
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('createLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('createForm').submit();
     });
 });
