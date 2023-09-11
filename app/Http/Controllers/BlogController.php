@@ -171,10 +171,12 @@ class BlogController extends Controller{
         $inputs = $request->all();
         \DB::beginTransaction();
         try {
+            // 画像データがある場合
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('image', 'public');
                 $inputs['image_path'] = $imagePath;
             }
+            // ログインユーザーである場合のみ登録
             if (session()->get('id')) {
                 $inputs['login_user_id'] = session()->get('id');
             } else {
@@ -303,16 +305,25 @@ class BlogController extends Controller{
     public function exeUpdate(EditRequest $request)
     {
         $inputs = $request->all();
-        // dd(session('previousUrl'));
         \DB::beginTransaction();
         try {
-            // ブログを更新
-            $blogs = Blog::find($inputs['id']);
-            $blogs->fill([
-                'title' => $inputs['title'],
-                'content' => $inputs['content'],
-            ]);
-            $blogs->save();
+            $blog = Blog::find($inputs['id']);
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('image', 'public');
+                $inputs['image_path'] = $imagePath;
+                $blog->fill([
+                    'title' => $inputs['title'],
+                    'content' => $inputs['content'],
+                    // 画像がある場合は更新
+                    'image_path' => $inputs['image_path'],
+                ]);
+            } else {
+                $blog->fill([
+                    'title' => $inputs['title'],
+                    'content' => $inputs['content'],
+                ]);
+            }
+            $blog->save();
             \DB::commit();
         } catch(\Throwable $e) {
             \DB::rollback();

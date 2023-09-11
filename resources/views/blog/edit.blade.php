@@ -6,7 +6,7 @@
         {{-- 外部ユーザー対策 --}}
         @if (session('id') === $blogs->login_user_id)
             <h2>編集フォーム</h2>
-            <form method="POST" action="{{ route('update') }}" onSubmit="return editCheckSubmit()">
+            <form method="POST" action="{{ route('update') }}" onSubmit="return editCheckSubmit()" enctype="multipart/form-data">
             @csrf
                 <input type="hidden" name="id" value="{{ $blogs->id }}">
                 <div class="form-group">
@@ -25,6 +25,15 @@
                             {{ $errors->first('title') }}
                         </div>
                     @endif
+                </div>
+                <div class="form-group">
+                    <label for="image">画像登録</label>
+                    <input
+                        type="file"
+                        class="form-control-file"
+                        name="image"
+                        id="image"
+                    >
                 </div>
                 <div class="form-group">
                     <label for="content">
