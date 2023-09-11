@@ -19,6 +19,27 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+// ログアウト時ポップを表示
+document.addEventListener("DOMContentLoaded", function () {
+    const openModalButton = document.getElementById("logoutModal");
+    const closeModalButton = document.getElementById("logout_closeModal");
+    const modalContainer = document.getElementById("submitModal");
+
+    openModalButton.addEventListener("click", function () {
+        modalContainer.style.display = "block";
+    });
+
+    closeModalButton.addEventListener("click", function () {
+        modalContainer.style.display = "none";
+    });
+
+    window.addEventListener("click", function (event) {
+        if (event.target === modalContainer) {
+            modalContainer.style.display = "none";
+        }
+    });
+});
+
 // アカウント作成の登録ボタン
 function showConfirmation() {
     const userName = document.getElementById('user_name').value;
@@ -80,7 +101,7 @@ function registerAccount() {
     });
 }
 
-// 送信確認(新規投稿と返信画面)
+// 送信確認(新規宿題投稿と返信画面)
 function checkSubmit(){
     if(window.confirm('送信してよろしいですか？')){
         return true;
@@ -108,21 +129,21 @@ function checkDelete(){
 }
 
 // 対象記事のリンクコピーの処理
-function copyToClipboard(text) {
-    const tempInput = document.createElement("input");
-    tempInput.value = text;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.body.removeChild(tempInput);
-}
+// function copyToClipboard(text) {
+//     const tempInput = document.createElement("input");
+//     tempInput.value = text;
+//     document.body.appendChild(tempInput);
+//     tempInput.select();
+//     document.body.removeChild(tempInput);
+// }
 
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("copyButton").addEventListener("click", function() {
-        const currentUrl = window.location.href;
-        copyToClipboard(currentUrl);
-        alert("リンクがコピーされました: " + currentUrl);
-    });
-});
+// document.addEventListener("DOMContentLoaded", function() {
+//     document.getElementById("copyButton").addEventListener("click", function() {
+//         const currentUrl = window.location.href;
+//         copyToClipboard(currentUrl);
+//         alert("リンクがコピーされました: " + currentUrl);
+//     });
+// });
 
 // 新規登録画面のhref属性のリンク制御かつフォーム送信
 document.addEventListener('DOMContentLoaded', function() {

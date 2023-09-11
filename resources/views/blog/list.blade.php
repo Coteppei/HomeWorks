@@ -71,12 +71,20 @@
                 <button type="submit" class="btn btn-primary float-right">検索</button>
             </form>
         </div>
-        <form action="{{ route('blogs') }}" method="POST">
+        @if (session()->has('user_search_flg'))
+            <form action="{{ route('userSearch') }}" method="GET">
+        @else
+            <form action="{{ route('blogs') }}" method="GET">
+        @endif
             <button type="submit" class="btn btn-danger mt-5 mb-5">検索のリセット</button>
         </form>
 
-        {{-- 改修中 --}}
         <h1 class="homewormb-5 text-center">宿題一覧</h1>
+        @if(session('user_search_flg'))
+            <div class="text-center text-danger">
+                <b>自分の宿題のみ表示</b>
+            </div>
+        @endif
         @isset($keyword)
             <div class="text-center">
                 <p class="side-text">検索ワード：</p>
@@ -86,20 +94,14 @@
         @foreach ($blogs as $blog)
         <hr color="#808080">
             <div class="click-range" onclick="location.href='{{ route('show', ['id' => $blog->id]) }}'">
-                {{-- 投稿時間 --}}
                 <p class="small-text side-text mb-1">学生カテゴリー：</p>
                 <p class="small-text side-text mr-3">{{ $blog->school }}</p>
-                {{-- 教科目カテゴリー --}}
                 <p class="small-text side-text">教科目カテゴリー：</p>
                 <p class="small-text side-text mr-3">{{ $blog->subject }}</p>
                 <b>
                     <p class="main-text">{{ $blog->title }}</p>
                 </b>
-                {{-- 記事の内容 --}}
-                {{-- 一行にまとめる --}}
                 <div>
-                    {{-- 学生カテゴリー --}}
-
                     <p class="small-text side-text mb-1">投稿日：</p>
                     <p class="small-text side-text mb-1">{{ $blog->created_at }}</p>
                 </div>

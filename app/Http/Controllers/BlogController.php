@@ -18,18 +18,29 @@ use Illuminate\Support\Facades\DB;
 
 class BlogController extends Controller{
   /**
-   * ブログ一覧を表示
+   * 宿題一覧を表示
    * ここは書かなくても問題はない。
    * ただ開発者が理解しやすくなるために書くのだ。
    * @return view
    */
     public function showList()
     {
+        // 未ログイン確認
         if (!session()->has('id')) {
             session()->put('user_name', 'ユーザー未登録');
         }
-        // created_atで降順に並べ替えてページネーションを5ページで適用
-        $blogs = DB::table('blogs')->orderBy('created_at', 'desc')->simplepaginate(5);
+        // 自分の宿題を表示が適応している時はその状態で表示
+        // どちらの条件でもページングで表示
+        if (session()->has('user_search_flg')) {
+            $blogs = DB::table('blogs')
+            ->where('login_user_id', session('id'))
+            ->orderBy('created_at', 'desc')
+            ->simplePaginate(5);
+        } else {    // それ以外の場合は全データを表示
+            $blogs = DB::table('blogs')
+            ->orderBy('created_at', 'desc')
+            ->simplepaginate(5);
+        }
         return view('blog.list', ['blogs' => $blogs]);
     }
     /**
@@ -39,17 +50,48 @@ class BlogController extends Controller{
      */
     public function showDetail($id)
     {
-        // ブログテーブルのidデータのみを取得する
         $blogs = Blog::find($id);
         $replies = Reply::where('foreign_id', $id)->get();
-        // ブログテーブルが存在しないとき、
         if (is_null($blogs)) {
             // セッションの作成
             \Session::flash('err_msg', 'データがありません。');
-            // リダイレクトでブログ一覧画面に返す。
             return redirect(route('blogs'));
         }
         return view('blog.detail', ['blogs' => $blogs, 'replies' => $replies]);
+    }
+
+    /**
+     * 自分の宿題のみを表示
+     * @param int $id
+     * @return view
+     */
+    public function userSearch()
+    {
+        if(session('user_name') === 'ユーザー未登録') {
+            $blogs = DB::table('blogs')->orderBy('created_at', 'desc')->simplepaginate(5);
+        } else {
+            session()->put('user_search_flg', '1');
+            $blogs = DB::table('blogs')
+            ->where('login_user_id', session('id'))
+            ->orderBy('created_at', 'desc')
+            ->simplePaginate(5);
+        }
+        return view('blog.list', ['blogs' => $blogs]);
+    }
+
+    /**
+     * 全ユーザーの宿題を表示
+     * @param int $id
+     * @return view
+     */
+    public function allSearch()
+    {
+        // 自分の宿題のみ表示の場合、全ユーザーの宿題が表示できるようにする
+        if (session()->has('user_search_flg')) {
+            session()->forget('user_search_flg');
+        }
+        $blogs = DB::table('blogs')->orderBy('created_at', 'desc')->simplepaginate(5);
+        return view('blog.list', ['blogs' => $blogs]);
     }
 
     /**
@@ -61,7 +103,7 @@ class BlogController extends Controller{
     {
         $keyword = $request->input('search'); // リクエストからキーワードを取得
         if ($request->has('search')) {
-            $keyword .=  ' ' . $request->input('search_sub');
+            $keyword .= ' ' . $request->input('search_sub');
         }
         $keyword = mb_convert_kana($keyword, 's'); // スペースを正規化
         $keywords = preg_split('/\s+/', $keyword); // 正規表現でスペースで区切る
@@ -74,9 +116,17 @@ class BlogController extends Controller{
                     ->orWhere('subject', $kw);
             });
         }
-        // created_atで降順に並べ替えてページネーションを5ページで適用
-        $blogs = $query->orderBy('created_at', 'desc')->simplepaginate(5);
-        // ブログと検索キーワードをページネーション用に取得
+        // 自分の宿題を表示が適応している時はその状態で検索
+        if (session()->has('user_search_flg')) {
+            $blogs = $query->where('login_user_id', session('id'))
+                ->orderBy('created_at', 'desc')
+                ->simplepaginate(5);
+        } else {
+            $blogs = $query
+                ->orderBy('created_at', 'desc')
+                ->simplepaginate(5);
+        }
+        // 宿題と検索キーワードをページネーション用に取得
         return view('blog.list', ['blogs' => $blogs, 'keyword' => $keyword]);
     }
 
@@ -104,7 +154,7 @@ class BlogController extends Controller{
     }
 
     /**
-     * ブログ登録画面を表示する
+     * 新規宿題登録画面を表示する
      * @return view
      */
     public function showCreate()
@@ -113,7 +163,7 @@ class BlogController extends Controller{
     }
 
     /**
-     * ブログ登録する
+     * 新規宿題を登録する
      * @return view
      */
     public function exeStore(BlogRequest $request)
@@ -125,7 +175,13 @@ class BlogController extends Controller{
                 $imagePath = $request->file('image')->store('image', 'public');
                 $inputs['image_path'] = $imagePath;
             }
-            $inputs['login_user_id'] = session()->get('id');
+            if (session()->get('id')) {
+                $inputs['login_user_id'] = session()->get('id');
+            } else {
+                \Session::flash('err_msg', 'ログインが無効です。ログインしてください');
+                return redirect(route('blogs'));
+            }
+
             // ブログを登録
             Blog::create($inputs);
             \DB::commit();
@@ -134,7 +190,11 @@ class BlogController extends Controller{
             abort(500);
         }
         \Session::flash('err_msg', 'ブログを登録しました');
-        return redirect(route('blogs'));
+        if (session()->has('user_search_flg')) {
+            return redirect(route('userSearch'));
+        } else {
+            return redirect(route('blogs'));
+        }
     }
 
     /**
@@ -155,6 +215,7 @@ class BlogController extends Controller{
     public function exeRegistration(CreateUserRequest $request)
     {
     $inputs = $request->all();
+    // dd($inputs);
     // パスワードをハッシュ化
     $inputs['password'] = Hash::make($inputs['password']);
     \DB::beginTransaction();
@@ -188,7 +249,7 @@ class BlogController extends Controller{
      */
     public function exelogin(LoginRequest $request)
     {
-        // ユーザー名とパスワードを取得
+            // ユーザー名とパスワードを取得
             $user_name = $request->input('user_name');
             $password = $request->input('password');
         // ユーザー名を取得
@@ -196,6 +257,7 @@ class BlogController extends Controller{
         if ($user && password_verify($password, $user->password)) {
             session()->put('id',$user->id);
             session()->put('user_name','ログインユーザー： ' . $user->user_name . 'さん');
+            \Session::flash('err_msg', 'ログインに成功しました。こんにちは' . $user->user_name . 'さん');
             return redirect(route('blogs'));
         } else {
             \Session::flash('err_msg', 'ログインに失敗しました。');
@@ -224,6 +286,7 @@ class BlogController extends Controller{
     {
             // ブログテーブルのidデータのみを取得する
             $blogs = Blog::find($id);
+            \Session::flash('previousUrl', url()->previous());
             // ブログテーブルが存在しないとき、
             if (is_null($blogs)) {
                 // セッションの作成
@@ -240,6 +303,7 @@ class BlogController extends Controller{
     public function exeUpdate(EditRequest $request)
     {
         $inputs = $request->all();
+        // dd(session('previousUrl'));
         \DB::beginTransaction();
         try {
             // ブログを更新
@@ -254,8 +318,8 @@ class BlogController extends Controller{
             \DB::rollback();
             abort(500);
         }
-        \Session::flash('err_msg', 'ブログを更新しました');
-        return redirect(route('blogs'));
+        \Session::flash('success_msg', '宿題内容を更新しました');
+        return redirect(session('previousUrl'));
     }
 
     /**
@@ -270,8 +334,9 @@ class BlogController extends Controller{
             return redirect(route('blogs'));
         }
         try {
-            // ブログを削除
+            // 投稿と返答の両方を削除
             Blog::destroy($id);
+            reply::where('foreign_id', $id)->delete();
         } catch(\Throwable $e) {
             abort(500);
         }

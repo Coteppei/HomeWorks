@@ -5,8 +5,8 @@
 <form method="POST" action="{{ route('registration') }}">
     @csrf
     <div class="login-container">
-        <h2>アカウント作成</h2>
-        <p class="mt-4">以下の項目に登録するユーザー名とパスワードを入れてください</p>
+        <h1>アカウント作成</h1>
+        <p class="mt-4 login_font_size" style="white-space: pre-wrap;">以下の項目に登録するユーザー名とパスワードを入れてください</p>
         {{-- 未入力および空白での入力時エラー出力 --}}
         @if($errors->has('user_name'))
             <p class="text-danger">{{ $errors->first('user_name') }}</p>
@@ -32,6 +32,19 @@
         </a>
     </div>
 </form>
+
+{{-- <div id="myModal" class="modal">
+    <div class="modal-content modal-attention">
+        <span class="close-button" id="closeModal">&times;</span>
+        <div>
+        <p class="mb-1">新規宿題投稿するには</p>
+        <p class="mb-1">アカウント作成もしくは</p>
+        <p class="mb-3">ログインしてください。</p>
+    </div>
+        <a href="{{ route('login') }}" class="btn btn-primary">ログイン</a>
+        <a href="{{ route('signUp') }}" class="btn btn-primary mt-3">アカウント作成</a>
+    </div>
+</div> --}}
 
 {{-- <div class="login-container">
     <h2>アカウント作成</h2>

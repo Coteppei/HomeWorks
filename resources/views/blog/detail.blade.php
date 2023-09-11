@@ -3,21 +3,26 @@
 @section('content')
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        {{-- ログインユーザーが投稿した記事の場合、編集と削除ボタンを表示 --}}
+        {{-- ログインユーザーが宿題を投稿しているもののみ編集と削除ボタンを表示 --}}
+        @if (session('success_msg'))
+                <p class="text-danger">
+                    {{ session('success_msg') }}
+                </p>
+            @endif
         <div class="btn-group">
             @if (session()->has('id') && session('id') === $blogs->login_user_id)
                 <form method="GET" action="{{ route('edit', [$blogs->id]) }}">
-                    <button type="submit" class="btn btn-primary">本投稿を編集する</button>
+                    <button type="submit" class="btn btn-primary">この宿題を編集する</button>
                 </form>
                 <form method="POST" action="{{ route('delete', [$blogs->id]) }}" onSubmit="return checkDelete()">
                     @csrf
-                    <button type="submit" class="btn btn-danger ml-5 mb-5 mr-5">本投稿を削除する</button>
+                    <button type="submit" class="btn btn-danger ml-5 mb-5 mr-5">この宿題を削除する</button>
                 </form>
             @endif
         </div>
         {{-- タイトルから順に常時表示 --}}
         <h2>{{$blogs->title}}</h2>
-        <p>質問者投稿日：{{$blogs->created_at}}</p>
+        <p>宿題投稿日：{{$blogs->created_at}}</p>
         {{-- 画像投稿がある時のみ画像を表示 --}}
         @if ($blogs->image_path !== null)
             <a href="#" data-toggle="modal" data-target="#imageModal">
@@ -60,20 +65,14 @@
         <button type="submit" class="btn btn-primary mr-5" >
             投稿する
         </button>
-        <button type="button" id="copyButton" class="btn btn-primary">
-            この記事のリンクをコピー
-        </button>
     </div>
 </form>
 <h3 class="mt-5">回答・コメントを確認する</h3>
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        @php
-            $photo_id = 0;
-        @endphp
         @foreach ($replies as $reply)
             @php
-                $photo_id += 1;
+                $photo_id = $loop->iteration;
             @endphp
             <hr>
                 <div>
@@ -91,9 +90,16 @@
             @endif
         @endforeach
         <hr>
-        <a class="btn btn-secondary mt-2 mb-5" href="{{ route('blogs') }}">
+        @if(session()->has('user_search_flg'))
+            <a class="btn btn-secondary mt-2 mb-5" href="{{ route('userSearch') }}">
+        @else
+            <a class="btn btn-secondary mt-2 mb-5" href="{{ route('blogs') }}">
+        @endif
             掲示板トップに戻る
         </a>
+        {{-- <button type="button" id="copyButton" class="btn btn-primary mt-2 mb-5 ml-3">
+            リンクをコピー
+        </button> --}}
     </div>
 </div>
 <!-- 投稿画像を表示する -->
@@ -108,22 +114,19 @@
 </div>
 <!-- 返信で添付された画像がある場合、その画像をモーダル表示 -->
 @isset($reply)
-@php
-    $photo_id = 0;
-@endphp
-@foreach ($replies as $reply)
-@php
-    $photo_id += 1;
-@endphp
-<div class="modal fade" id="imageModal{{ $photo_id }}" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel2">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-body text-center">
-                <img src="{{ asset('storage/' . $reply->image_path) }}" alt="Image" class="center-image" id="modalImage2" width="1000px">
+    @foreach ($replies as $reply)
+        @php
+            $photo_id = $loop->iteration;
+        @endphp
+        <div class="modal fade" id="imageModal{{ $photo_id }}" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel2">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <img src="{{ asset('storage/' . $reply->image_path) }}" alt="Image" class="center-image" id="modalImage{{ $photo_id }}" width="1000px">
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-@endforeach
+    @endforeach
 @endisset
 @endsection

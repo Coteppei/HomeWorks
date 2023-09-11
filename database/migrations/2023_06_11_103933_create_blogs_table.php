@@ -14,7 +14,7 @@ return new class extends Migration
 
         Schema::create('blogs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('login_user_id');
+            $table->integer('login_user_id')->nullable(false);
             $table->string('school');                   // 小・中・高・大の区分け
             $table->string('subject');                  // 教科
             $table->string('title', 100);               // タイトル

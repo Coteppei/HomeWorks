@@ -18,9 +18,13 @@
 Route::get('/', 'App\Http\Controllers\BlogController@showList')->name('blogs');
 # キーワード検索
 Route::get('/search', 'App\Http\Controllers\BlogController@search')->name('search');
+# ログインユーザーが宿題を投稿した記事のみ表示
+Route::get('/userSearch', 'App\Http\Controllers\BlogController@userSearch')->name('userSearch');
+# 全ユーザーが宿題を投稿した記事を表示
+Route::get('/allSearch', 'App\Http\Controllers\BlogController@allSearch')->name('allSearch');
 
-# 新規登録画面を表示
-Route::post('/blog/create', 'App\Http\Controllers\BlogController@showCreate')->name('create');
+# 新規宿題登録画面を表示
+Route::get('/blog/create', 'App\Http\Controllers\BlogController@showCreate')->name('create');
 # スレッドを新規登録
 Route::post('/blog/store', 'App\Http\Controllers\BlogController@exeStore')->name('store');
 
@@ -49,5 +53,5 @@ Route::get('/blog/edit/{id}', 'App\Http\Controllers\BlogController@showEdit')->n
 # 編集内容に更新処理を実行
 Route::post('/blog/update', 'App\Http\Controllers\BlogController@exeUpdate')->name('update');
 
-# 投稿の削除
+# 投稿した宿題の削除
 Route::post('/blog/delete/{id}', 'App\Http\Controllers\BlogController@exeDelete')->name('delete');

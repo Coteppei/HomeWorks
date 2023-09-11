@@ -16,6 +16,7 @@ class CreateUserRequest extends FormRequest
         return [
             'user_name' => 'required',
             'password' => 'required',
+            ''
         ];
     }
 }
