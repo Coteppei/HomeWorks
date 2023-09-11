@@ -40,12 +40,11 @@
 <!-- 未ログイン時注意モーダル表示 -->
 <div id="myModal" class="modal">
     <div class="modal-content modal-attention">
-        {{-- <span class="close-button" id="closeModal">&times;</span> --}}
         <div>
-        <p class="mb-1">新規宿題投稿するには</p>
-        <p class="mb-1">アカウント作成もしくは</p>
-        <p class="mb-3">ログインしてください。</p>
-    </div>
+            <p class="mb-1">新規宿題投稿するには</p>
+            <p class="mb-1">アカウント作成もしくは</p>
+            <p class="mb-3">ログインしてください。</p>
+        </div>
         <a href="{{ route('login') }}" class="btn btn-primary">ログイン</a>
         <a href="{{ route('signUp') }}" class="btn btn-primary mt-4">アカウント作成</a>
         <a href="#" class="btn btn-secondary mt-4" id="closeModal">キャンセル</a>
@@ -56,10 +55,10 @@
 <div id="submitModal" class="modal">
     <div class="modal-content modal-attention">
         <div>
-        <p class="mb-1">ログアウトします</p>
-        <p class="mb-1">よろしければログアウト実行</p>
-        <p class="mb-3">ボタンを押してください。</p>
-    </div>
+            <p class="mb-1">ログアウトします</p>
+            <p class="mb-1">よろしければログアウト実行</p>
+            <p class="mb-3">ボタンを押してください。</p>
+        </div>
         <a class="btn btn-primary mt-3" href="{{ route('logout') }}">ログアウトする</a>
         <a href="#" class="btn btn-secondary mt-4" id="logout_closeModal">キャンセル</a>
     </div>

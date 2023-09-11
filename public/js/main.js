@@ -19,13 +19,40 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// ログアウト時ポップを表示
+// ログアウト時確認モーダルを表示
 document.addEventListener("DOMContentLoaded", function () {
     const openModalButton = document.getElementById("logoutModal");
     const closeModalButton = document.getElementById("logout_closeModal");
     const modalContainer = document.getElementById("submitModal");
 
     openModalButton.addEventListener("click", function () {
+        modalContainer.style.display = "block";
+    });
+
+    closeModalButton.addEventListener("click", function () {
+        modalContainer.style.display = "none";
+    });
+
+    window.addEventListener("click", function (event) {
+        if (event.target === modalContainer) {
+            modalContainer.style.display = "none";
+        }
+    });
+});
+
+// サインインの際に登録内容の確認モーダルを表示
+document.addEventListener("DOMContentLoaded", function () {
+    const openModalButton = document.getElementById("account_make_modal");
+    const closeModalButton = document.getElementById("sign_up_closeModal");
+    const modalContainer = document.getElementById("sign_up_Modal");
+
+    openModalButton.addEventListener("click", function () {
+        const userInput = document.getElementById('user_name').value;
+        const outputName = document.getElementById("output_user_name");
+        outputName.innerHTML = userInput;
+        const passInput = document.getElementById('password').value;
+        const outputPass = document.getElementById("output_password");
+        outputPass.innerHTML = passInput;
         modalContainer.style.display = "block";
     });
 
@@ -103,7 +130,7 @@ function registerAccount() {
 
 // 送信確認(新規宿題投稿と返信画面)
 function checkSubmit(){
-    if(window.confirm('送信してよろしいですか？')){
+    if(window.confirm('投稿してよろしいですか？')){
         return true;
     } else {
         return false;
@@ -128,7 +155,7 @@ function checkDelete(){
     }
 }
 
-// 対象記事のリンクコピーの処理
+// 対象記事のリンクコピーの処理-廃止
 // function copyToClipboard(text) {
 //     const tempInput = document.createElement("input");
 //     tempInput.value = text;
