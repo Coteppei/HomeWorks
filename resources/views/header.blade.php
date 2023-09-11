@@ -1,27 +1,27 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">宿題掲示板</a>
+    <a class="navbar-brand top-header-size" href="#">宿題掲示板</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-            <a class="nav-item nav-link link-color" href="{{ route('blogs') }}">宿題一覧<span class="sr-only"></span></a>
+            <a class="nav-item nav-link link-color menu-header-size" href="{{ route('blogs') }}">宿題一覧<span class="sr-only"></span></a>
             @if (session()->has('id'))
-                <a class="nav-item nav-link link-color" href="{{ route('create') }}">新規宿題投稿</a>
+                <a class="nav-item nav-link link-color menu-header-size" href="{{ route('create') }}">新規宿題投稿</a>
                 @if (session()->has('user_search_flg'))
-                    <a class="nav-item nav-link link-color" href="{{ route('allSearch') }}">全ての宿題を表示</a>
+                    <a class="nav-item nav-link link-color menu-header-size" href="{{ route('allSearch') }}">全ての宿題を表示</a>
                 @else
-                    <a class="nav-item nav-link link-color" href="{{ route('userSearch') }}">自分の宿題を表示</a>
+                    <a class="nav-item nav-link link-color menu-header-size" href="{{ route('userSearch') }}">自分の宿題を表示</a>
                 @endif
             @else
-                <a class="nav-item nav-link link-color" href="#" id="showModal">新規宿題投稿</a>
+                <a class="nav-item nav-link link-color menu-header-size" href="#" id="showModal">新規宿題投稿</a>
             @endif
             {{-- ログイン判定 --}}
             @if (session()->get('id'))  {{-- ログイン時ログアウトを表示 --}}
-                <a class="nav-item nav-link link-color" href="#" id="logoutModal">ログアウト</a>
+                <a class="nav-item nav-link link-color menu-header-size" href="#" id="logoutModal">ログアウト</a>
             @else                       {{-- 未ログインの時はアカウント作成とログインを表示 --}}
-                <a class="nav-item nav-link link-color" href="{{ route('signUp') }}">アカウント作成</a>
-                <a class="nav-item nav-link link-color" href="{{ route('login') }}">ログイン</a>
+                <a class="nav-item nav-link link-color menu-header-size" href="{{ route('signUp') }}">アカウント作成</a>
+                <a class="nav-item nav-link link-color menu-header-size" href="{{ route('login') }}">ログイン</a>
             @endif
         </div>
     </div>
@@ -59,7 +59,7 @@
             <p class="mb-1">よろしければログアウト実行</p>
             <p class="mb-3">ボタンを押してください。</p>
         </div>
-        <a class="btn btn-primary mt-3" href="{{ route('logout') }}">ログアウトする</a>
+        <a class="btn btn-primary mt-3" href="{{ route('logout') }}">ログアウト実行</a>
         <a href="#" class="btn btn-secondary mt-4" id="logout_closeModal">キャンセル</a>
     </div>
 </div>

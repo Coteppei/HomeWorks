@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use illuminate\Http\Request;
 use App\Models\Blog;
 use App\Models\Reply;
+use App\Http\Requests\ResolveRequest;
 use App\Http\Requests\BlogRequest;
 use App\Http\Requests\SearchRequest;
 use App\Http\Requests\EditRequest;
@@ -29,22 +30,18 @@ class BlogController extends Controller{
         if (!session()->has('id')) {
             session()->put('user_name', 'ユーザー未登録');
         }
+        $blogs = DB::table('blogs')
+        ->orderBy('created_at', 'desc');
         // 自分の宿題を表示が適応している時はその状態で表示
         // どちらの条件でもページングで表示
         if (session()->has('user_search_flg')) {
-            $blogs = DB::table('blogs')
-            ->where('login_user_id', session('id'))
-            ->orderBy('created_at', 'desc')
-            ->simplePaginate(5);
-        } else {    // それ以外の場合は全データを表示
-            $blogs = DB::table('blogs')
-            ->orderBy('created_at', 'desc')
-            ->simplepaginate(5);
+            $blogs ->where('login_user_id', session('id'));
         }
+        $blogs = $blogs->simplePaginate(10);
         return view('blog.list', ['blogs' => $blogs]);
     }
     /**
-     * ブログ詳細を表示
+     * 宿題の詳細を表示
      * @param int $id
      * @return view
      */
@@ -61,6 +58,27 @@ class BlogController extends Controller{
     }
 
     /**
+     * 宿題が解決したと判断する処理
+     * @param int $id
+     */
+    public function exeResolve(ResolveRequest $request)
+    {
+        $inputs = $request->all();
+        \DB::beginTransaction();
+        try {
+            $blogs = Blog::find($inputs['id']);
+            $blogs->resolve_judgement = 1;
+            $blogs->save(); // ブログモデルを保存して更新を反映
+            \DB::commit();
+        } catch (\Throwable $e) {
+            \DB::rollback();
+            abort(500);
+        }
+        \Session::flash('err_msg', 'あなたの宿題が一つ終わりました！やったね🎊😆🎉');
+        return redirect(route('blogs'));
+    }
+
+    /**
      * 自分の宿題のみを表示
      * @param int $id
      * @return view
@@ -68,13 +86,13 @@ class BlogController extends Controller{
     public function userSearch()
     {
         if(session('user_name') === 'ユーザー未登録') {
-            $blogs = DB::table('blogs')->orderBy('created_at', 'desc')->simplepaginate(5);
+            $blogs = DB::table('blogs')->orderBy('created_at', 'desc')->simplepaginate(10);
         } else {
             session()->put('user_search_flg', '1');
             $blogs = DB::table('blogs')
             ->where('login_user_id', session('id'))
             ->orderBy('created_at', 'desc')
-            ->simplePaginate(5);
+            ->simplePaginate(10);
         }
         return view('blog.list', ['blogs' => $blogs]);
     }
@@ -90,7 +108,7 @@ class BlogController extends Controller{
         if (session()->has('user_search_flg')) {
             session()->forget('user_search_flg');
         }
-        $blogs = DB::table('blogs')->orderBy('created_at', 'desc')->simplepaginate(5);
+        $blogs = DB::table('blogs')->orderBy('created_at', 'desc')->simplepaginate(10);
         return view('blog.list', ['blogs' => $blogs]);
     }
 
@@ -104,6 +122,9 @@ class BlogController extends Controller{
         $keyword = $request->input('search'); // リクエストからキーワードを取得
         if ($request->has('search')) {
             $keyword .= ' ' . $request->input('search_sub');
+            if ($request->input('search_judge') !== '選択しない') {
+                $keyword .= ' ' . $request->input('search_judge');
+            }
         }
         $keyword = mb_convert_kana($keyword, 's'); // スペースを正規化
         $keywords = preg_split('/\s+/', $keyword); // 正規表現でスペースで区切る
@@ -114,17 +135,23 @@ class BlogController extends Controller{
                     ->orWhere('content', 'LIKE', '%' . $kw . '%')
                     ->orWhere('school', $kw)
                     ->orWhere('subject', $kw);
+                // "解決済" のキーワードが含まれている場合、resolve_judgement = 1 のデータも検索
+                if (strpos($kw, '解決済') !== false) {
+                    $query->orWhere('resolve_judgement', 1);
+                } elseif (strpos($kw, '未解決') !== false) {
+                    $query->orWhere('resolve_judgement', 0);
+                }
             });
         }
         // 自分の宿題を表示が適応している時はその状態で検索
         if (session()->has('user_search_flg')) {
             $blogs = $query->where('login_user_id', session('id'))
                 ->orderBy('created_at', 'desc')
-                ->simplepaginate(5);
+                ->simplepaginate(10);
         } else {
             $blogs = $query
                 ->orderBy('created_at', 'desc')
-                ->simplepaginate(5);
+                ->simplepaginate(10);
         }
         // 宿題と検索キーワードをページネーション用に取得
         return view('blog.list', ['blogs' => $blogs, 'keyword' => $keyword]);
@@ -217,7 +244,6 @@ class BlogController extends Controller{
     public function exeRegistration(CreateUserRequest $request)
     {
     $inputs = $request->all();
-    // dd($inputs);
     // パスワードをハッシュ化
     $inputs['password'] = Hash::make($inputs['password']);
     \DB::beginTransaction();
@@ -312,6 +338,8 @@ class BlogController extends Controller{
                 $imagePath = $request->file('image')->store('image', 'public');
                 $inputs['image_path'] = $imagePath;
                 $blog->fill([
+                    'school' => $inputs['school'],
+                    'subject' => $inputs['subject'],
                     'title' => $inputs['title'],
                     'content' => $inputs['content'],
                     // 画像がある場合は更新
@@ -319,6 +347,8 @@ class BlogController extends Controller{
                 ]);
             } else {
                 $blog->fill([
+                    'school' => $inputs['school'],
+                    'subject' => $inputs['subject'],
                     'title' => $inputs['title'],
                     'content' => $inputs['content'],
                 ]);

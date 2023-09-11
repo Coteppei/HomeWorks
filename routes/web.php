@@ -43,10 +43,12 @@ Route::post('/blog/exelogin','App\Http\Controllers\BlogController@exeLogin')->na
 # ログアウト実行
 Route::get('/blog/logout','App\Http\Controllers\BlogController@Logout')->name('logout');
 
-# 詳細画面表示
+# 宿題詳細画面表示
 Route::get('/blog/{id}', 'App\Http\Controllers\BlogController@showDetail')->name('show');
 # 回答の送信
 Route::post('/blog/reply', 'App\Http\Controllers\BlogController@exeReply')->name('reply');
+# 問題解決したことを反映
+Route::post('/blog/resolve', 'App\Http\Controllers\BlogController@exeResolve')->name('resolve');
 
 # 編集画面を表示
 Route::get('/blog/edit/{id}', 'App\Http\Controllers\BlogController@showEdit')->name('edit');

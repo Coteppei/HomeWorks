@@ -3,4 +3,7 @@
     .click-range:hover {
         background-color: transparent;
     }
+    .smart-mr {
+        margin-right: 30px;
+    }
 }

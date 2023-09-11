@@ -9,7 +9,6 @@
     <div class="col-md-8 col-md-offset-2">
         <h2>新規宿題投稿フォーム</h2>
         {{-- enctypeは画像アップロード用の文言 --}}
-{{-- 改修予定：ユーザーでログインできているときはformで遷移できるようにする。できていないときはログイン画面へ遷移する仕組みを作る。 --}}
         <form method="POST" action="{{ route('store') }}" onSubmit="return checkSubmit()" enctype="multipart/form-data">
         @csrf
             <div class="form-group">

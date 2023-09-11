@@ -1,3 +1,11 @@
+/* ヘッダー文字サイズの調整 */
+.top-header-size {
+    font-size: 22px;
+}
+.menu-header-size {
+    font-size: 17px;
+}
+
 /* モーダルのスタイル */
 .modal {
     display: none; /* 初期状態では非表示 */
@@ -88,12 +96,14 @@ html {
     color: #b3b3b3;
 }
 .main-text {
-    font-size: 15px;
+    font-size: 17px;
     color: #000080;
 }
-
 .side-text {
     display: inline-block;
+}
+.gray {
+    color: #aaaaaa;
 }
 
 /* 選択コマンドの色を変更 */
@@ -106,5 +116,14 @@ html {
 
 /* ログインおよび新規アカウント登録の説明文字サイズ */
 .login_font_size {
-    font-size: 20px;
+    font-size: 17px;
+}
+
+/* 宿題が解決したボタンの色を濃い青に設定 */
+.btn-Resolve {
+    background-color: #0303ff;
+    color: #ffffff;
+}
+.text-resolve {
+    color: #0303ff;
 }

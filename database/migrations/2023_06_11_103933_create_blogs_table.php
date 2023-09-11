@@ -15,11 +15,12 @@ return new class extends Migration
         Schema::create('blogs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('login_user_id')->nullable(false);
-            $table->string('school');                   // 小・中・高・大の区分け
-            $table->string('subject');                  // 教科
-            $table->string('title', 100);               // タイトル
-            $table->text('content');                    // 詳細
-            $table->string('image_path')->nullable();   // 画像
+            $table->string('school');                           // 小・中・高の区分け
+            $table->string('subject');                          // 教科
+            $table->string('title', 100);                       // タイトル
+            $table->text('content');                            // 詳細
+            $table->string('image_path')->nullable();           // 画像
+            $table->integer('resolve_judgement')->default(0);   // 解決か未解決が判定
             $table->timestamps();
         });
     }

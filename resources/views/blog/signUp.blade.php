@@ -4,7 +4,7 @@
 <form method="POST" action="{{ route('registration') }}">
     @csrf
     <div class="login-container">
-        <h1>アカウント作成</h1>
+        <h2>アカウント作成</h2>
         <p class="mt-4 login_font_size" style="white-space: pre-wrap;">以下の項目に登録するユーザー名とパスワードを入れてください</p>
         {{-- 未入力および空白での入力時エラー出力 --}}
         @if($errors->has('user_name'))
@@ -33,7 +33,6 @@
 
     <!-- サインアップデータ入力後モーダル表示 -->
     <div id="sign_up_Modal" class="modal">
-
         <div class="modal-content modal-attention">
             <div>
                 <p class="mb-1">以下の登録内容でよろしいでしょうか</p>

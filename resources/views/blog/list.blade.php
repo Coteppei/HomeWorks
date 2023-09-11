@@ -18,8 +18,9 @@
                 <h4>カテゴリー検索</h4>
                 <table class="category-search">
                     <tr>
-                        <th>学生カテゴリー</th>
-                        <th>教科目カテゴリー</th>
+                        <th>学生別</th>
+                        <th>教科目</th>
+                        <th>解決状況</th>
                         <th></th>
                     </tr>
                     <tr>
@@ -44,8 +45,13 @@
                             </select>
                         </td>
                         <td>
-                            <button type="submit" class="btn btn-sm btn-primary">検索</button>
+                            <select name="search_judge">
+                                <option>選択しない</option>
+                                <option>未解決</option>
+                                <option>解決済</option>
+                            </select>
                         </td>
+                        <td><button type="submit" class="btn btn-sm btn-primary">検索</button></td>
                     </tr>
                 </table>
                 @if ($errors->has('school'))
@@ -68,7 +74,7 @@
         <div class="form-group">
             <form action="{{ route('search') }}" method="GET">
                 <input type="text" class="form-control mb-4" id="search" name="search" placeholder="キーワードを入力してください">
-                <button type="submit" class="btn btn-primary float-right">検索</button>
+                <button type="submit" class="btn btn-primary float-right smart-mr">検索</button>
             </form>
         </div>
         @if (session()->has('user_search_flg'))
@@ -94,6 +100,11 @@
         @foreach ($blogs as $blog)
         <hr color="#808080">
             <div class="click-range" onclick="location.href='{{ route('show', ['id' => $blog->id]) }}'">
+                @if ($blog->resolve_judgement === 1)
+                    <b><p class="small-text side-text text-resolve mb-1 mr-3">解決済</p></b>
+                @else
+                    <b><p class="small-text side-text text-danger mb-1 mr-3">未解決</p></b>
+                @endif
                 <p class="small-text side-text mb-1">学生カテゴリー：</p>
                 <p class="small-text side-text mr-3">{{ $blog->school }}</p>
                 <p class="small-text side-text">教科目カテゴリー：</p>

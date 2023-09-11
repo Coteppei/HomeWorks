@@ -10,7 +10,7 @@
                 </p>
             @endif
         <div class="btn-group">
-            @if (session()->has('id') && session('id') === $blogs->login_user_id)
+            @if (session('id') === $blogs->login_user_id)
                 <form method="GET" action="{{ route('edit', [$blogs->id]) }}">
                     <button type="submit" class="btn btn-primary">この宿題を編集する</button>
                 </form>
@@ -21,8 +21,14 @@
             @endif
         </div>
         {{-- タイトルから順に常時表示 --}}
+        <p class="side-text gray mb-1">学生カテゴリー：</p>
+        <p class="side-text gray mr-3">{{ $blogs->school }}</p>
+        <p class="side-text gray">教科目カテゴリー：</p>
+        <p class="side-text gray mr-3">{{ $blogs->subject }}</p>
+        <br>
+        <p class="side-text gray ">宿題投稿日：</p>
+        <p class="side-text gray mr-3">{{ $blogs->created_at }}</p>
         <h2>{{$blogs->title}}</h2>
-        <p>宿題投稿日：{{$blogs->created_at}}</p>
         {{-- 画像投稿がある時のみ画像を表示 --}}
         @if ($blogs->image_path !== null)
             <a href="#" data-toggle="modal" data-target="#imageModal">
@@ -76,6 +82,7 @@
             @endphp
             <hr>
                 <div>
+                    <p class="small-text side-text">{{ $photo_id }}.</p>
                     <p class="small-text side-text">回答者返答日：</p>
                     <p class="small-text side-text">{{$reply->created_at}}</p>
                     <p>{{$reply->content}}</p>
@@ -90,16 +97,24 @@
             @endif
         @endforeach
         <hr>
-        @if(session()->has('user_search_flg'))
-            <a class="btn btn-secondary mt-2 mb-5" href="{{ route('userSearch') }}">
-        @else
-            <a class="btn btn-secondary mt-2 mb-5" href="{{ route('blogs') }}">
-        @endif
-            掲示板トップに戻る
-        </a>
-        {{-- <button type="button" id="copyButton" class="btn btn-primary mt-2 mb-5 ml-3">
-            リンクをコピー
-        </button> --}}
+        <div class="d-flex">
+            @if (session()->has('user_search_flg'))
+                <a class="btn btn-secondary mt-2 mb-5 mr-2" href="{{ route('userSearch') }}">
+            @else
+                <a class="btn btn-secondary mt-2 mb-5 mr-2" href="{{ route('blogs') }}">
+            @endif
+                掲示板トップに戻る
+            </a>
+            @if (session()->has('id') && session('id') === $blogs->login_user_id && $blogs->resolve_judgement === 0)
+                <form method="POST" action={{ route('resolve') }} onSubmit="return checkResolve()">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $blogs->id }}">
+                    <button type="submit" class="btn btn-Resolve ml-5 mt-2 mb-4">
+                        🎊宿題が解決した🎉
+                    </button>
+                </form>
+            @endif
+        </div>
     </div>
 </div>
 <!-- 投稿画像を表示する -->

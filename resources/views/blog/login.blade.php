@@ -4,7 +4,7 @@
 <form method="POST" action="{{ route('exelogin') }}">
     @csrf
     <div class="login-container">
-        <h1>ログイン</h1>
+        <h2>ログイン</h2>
         <p class="mt-4 login_font_size">以下の項目に登録したユーザー名とパスワードを入れてください</p>
         {{-- 未入力および空白での入力時エラー出力 --}}
         @if($errors->has('user_name'))

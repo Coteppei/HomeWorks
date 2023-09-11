@@ -155,6 +155,15 @@ function checkDelete(){
     }
 }
 
+// 宿題解決の確認
+function checkResolve(){
+    if(window.confirm('宿題が解決しましたか？')){
+        return true;
+    } else {
+        return false;
+    }
+}
+
 // 対象記事のリンクコピーの処理-廃止
 // function copyToClipboard(text) {
 //     const tempInput = document.createElement("input");
