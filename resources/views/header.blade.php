@@ -1,5 +1,8 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand top-header-size" href="#">宿題掲示板</a>
+    <a class="navbar-brand top-header-size" href="#">
+        <span>宿題掲示板</span>
+        <span style="font-family: 'Bangers', cursive;" class="display-none">HomesWorks</span>
+    </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
     </button>
@@ -28,10 +31,9 @@
 </nav>
 <div class="text-center">
     @if (session()->get('user_name') === 'ユーザー未登録')
-
-        <p class="mt-3 text-danger">
+        <p class="mt-3 pb-4 text-danger">
     @else
-        <p class="mt-3">
+        <p class="mt-3 pb-4">
     @endif
     {{ session()->get('user_name')}}
     </p>

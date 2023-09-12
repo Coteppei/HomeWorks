@@ -1,9 +1,31 @@
-/* 簡易的スマホ判定 */
+/* スマホ判定 */
 @media (max-width: 767px) {
     .click-range:hover {
         background-color: transparent;
     }
     .smart-mr {
         margin-right: 30px;
+    }
+    .smart-title-text {
+        font-size: 20px;
+    }
+    .smart-detail-text {
+        font-size: 17px;
+    }
+    .smart-header-display {
+        font-size: 1.2rem;
+    }
+    .smart-category {
+        font-size: 10px;
+    }
+    .smart-reply-text {
+        font-size: 17px;
+    }
+}
+
+/* さらに狭幅 */
+@media (max-width: 353px) {
+    .display-none{
+        display:none;
     }
 }

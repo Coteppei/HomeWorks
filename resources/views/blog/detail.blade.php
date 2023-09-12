@@ -21,14 +21,15 @@
             @endif
         </div>
         {{-- タイトルから順に常時表示 --}}
-        <p class="side-text gray mb-1">学生カテゴリー：</p>
-        <p class="side-text gray mr-3">{{ $blogs->school }}</p>
-        <p class="side-text gray">教科目カテゴリー：</p>
-        <p class="side-text gray mr-3">{{ $blogs->subject }}</p>
-        <br>
-        <p class="side-text gray ">宿題投稿日：</p>
-        <p class="side-text gray mr-3">{{ $blogs->created_at }}</p>
-        <h2>{{$blogs->title}}</h2>
+        <div>
+            <p class="side-text smart-category font-gray mb-1">学生カテゴリー：</p>
+            <p class="side-text smart-category font-gray mr-3">{{ $blogs->school }}</p>
+            <p class="side-text smart-category font-gray">教科目カテゴリー：</p>
+            <p class="side-text smart-category font-gray mr-3">{{ $blogs->subject }}</p>
+        </div>
+        <p class="side-text smart-category font-gray ">宿題投稿日：</p>
+        <p class="side-text smart-category font-gray mr-3">{{ $blogs->created_at }}</p>
+        <p class="title-text smart-title-text">{{$blogs->title}}</p>
         {{-- 画像投稿がある時のみ画像を表示 --}}
         @if ($blogs->image_path !== null)
             <a href="#" data-toggle="modal" data-target="#imageModal">
@@ -38,13 +39,14 @@
             </a>
         @endif
         <div style="overflow: auto; max-height: 300px;">
-            <h4 class="mt-4">詳細説明</h4>
-            <p>{{$blogs->content}}</p>
+            <h4 class="mt-4 smart-header-display">詳細説明</h4>
+            <pre class="detail-text smart-detail-text">{{ $blogs->content }}</pre>
+
         </div>
     </div>
 </div>
 
-<h3 class="mt-3 mb-3">回答・コメントを投稿する</h3>
+<h3 class="smart-header-display mt-3 mb-3">回答・コメントを投稿する</h3>
 <form method="POST" action="{{ route('reply',['foreign_id' => $blogs->id]) }}" onSubmit="return checkSubmit()" enctype="multipart/form-data">
     @csrf
     <div class="form-group">
@@ -60,7 +62,9 @@
             </div>
         @endif
     </div>
-        <label for="image">画像登録</label>
+        <label for="image photo-display smart-photo-display">
+            <h3 class="smart-header-display mt-3">画像登録</h3>
+        </label>
         <input
             type="file"
             class="form-control-file"
@@ -73,7 +77,7 @@
         </button>
     </div>
 </form>
-<h3 class="mt-5">回答・コメントを確認する</h3>
+<h3 class="smart-header-display mt-5">回答・コメントを確認する</h3>
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
         @foreach ($replies as $reply)
@@ -85,7 +89,7 @@
                     <p class="small-text side-text">{{ $photo_id }}.</p>
                     <p class="small-text side-text">回答者返答日：</p>
                     <p class="small-text side-text">{{$reply->created_at}}</p>
-                    <p>{{$reply->content}}</p>
+                    <pre class="reply-text smart-reply-text">{{$reply->content}}</pre>
                 </div>
             {{-- 画像登録 --}}
             @if ($reply->image_path !== null)
@@ -117,17 +121,17 @@
         </div>
     </div>
 </div>
-<!-- 投稿画像を表示する -->
+<!-- 投稿画像をタップしたときモーダル表示する -->
 <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel1">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-body text-center">
-                <img src="{{ asset('storage/' . $blogs->image_path) }}" alt="Image" class="center-image" id="modalImage1" width="1000px">
+                <img src="{{ asset('storage/' . $blogs->image_path) }}" alt="Image" class="center-image" id="modalImage1" width="100%">
             </div>
         </div>
     </div>
 </div>
-<!-- 返信で添付された画像がある場合、その画像をモーダル表示 -->
+<!-- 返信で添付された画像をタップしたときモーダル表示する -->
 @isset($reply)
     @foreach ($replies as $reply)
         @php
@@ -137,7 +141,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-body text-center">
-                        <img src="{{ asset('storage/' . $reply->image_path) }}" alt="Image" class="center-image" id="modalImage{{ $photo_id }}" width="1000px">
+                        <img src="{{ asset('storage/' . $reply->image_path) }}" alt="Image" class="center-image" id="modalImage{{ $photo_id }}" width="100%">
                     </div>
                 </div>
             </div>

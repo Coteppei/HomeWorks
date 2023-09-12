@@ -17,7 +17,8 @@
                     <label for="school">
                         学生カテゴリー
                     </label>
-                    <br>
+                </div>
+                <div class="form-group">
                     @foreach ($schools as $school)
                         <input
                             id="{{ $school }}"

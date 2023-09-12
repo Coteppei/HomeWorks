@@ -97,12 +97,12 @@ html {
 }
 .main-text {
     font-size: 17px;
-    color: #000080;
+    color: #0202ba;
 }
 .side-text {
     display: inline-block;
 }
-.gray {
+.font-gray {
     color: #aaaaaa;
 }
 
@@ -117,6 +117,24 @@ html {
 /* ログインおよび新規アカウント登録の説明文字サイズ */
 .login_font_size {
     font-size: 17px;
+}
+
+/* 宿題詳細画面 */
+/* 文字サイズ等調整 */
+.title-text {
+    font-size: 25px;
+    color: #000080;
+    font-weight: bold;
+}
+.detail-text {
+    font-size: 19px;
+    color: #000080;
+    font-weight: bold;
+}
+.reply-text {
+    font-size: 19px;
+    color: #000080;
+    font-weight: bold;
 }
 
 /* 宿題が解決したボタンの色を濃い青に設定 */

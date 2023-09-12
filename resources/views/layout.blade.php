@@ -16,7 +16,6 @@
     <header>
         @include('header')
     </header>
-    <br>
     <div class="container">
         @yield('content')
     </div>
