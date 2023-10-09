@@ -48,12 +48,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     openModalButton.addEventListener("click", function () {
         const userInput = document.getElementById('user_name').value;
-        const outputName = document.getElementById("output_user_name");
-        outputName.innerHTML = userInput;
         const passInput = document.getElementById('password').value;
-        const outputPass = document.getElementById("output_password");
-        outputPass.innerHTML = passInput;
-        modalContainer.style.display = "block";
+        // ユーザー名およびパスワードが入力されている場合は、確認モーダルを表示
+        if (userInput.trim() !== '' && passInput.trim() !== '') {
+            const outputName = document.getElementById("output_user_name");
+            const outputPass = document.getElementById("output_password");
+            outputName.innerHTML = userInput;
+            outputPass.innerHTML = passInput;
+            modalContainer.style.display = "block";
+        } else {
+            // いずれかの入力が空の場合は入力喚起を表示
+            alert("ユーザー名とパスワードを入力してください");
+            return;
+        }
     });
 
     closeModalButton.addEventListener("click", function () {
@@ -66,24 +73,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
-
-// アカウント作成の登録ボタン
-function showConfirmation() {
-    const userName = document.getElementById('user_name').value;
-    const password = document.getElementById('password').value;
-
-    if (userName.trim() === '' || password.trim() === '') {
-        const errorMessage = document.getElementById('error-message');
-        errorMessage.style.display = 'block';
-        return;
-    }
-
-    document.getElementById('confirmed-user_name').textContent = userName;
-    document.getElementById('confirmed-password').textContent = password;
-
-    const modal = document.getElementById('confirmation-modal');
-    modal.style.display = 'block';
-}
 
 function closeConfirmation() {
     const modal = document.getElementById('confirmation-modal');
