@@ -29,7 +29,9 @@
         </div>
         <p class="side-text smart-category font-gray ">宿題投稿日：</p>
         <p class="side-text smart-category font-gray mr-3">{{ $blogs->created_at }}</p>
-        <p class="title-text smart-title-text">{{$blogs->title}}</p>
+        <p class="title-text smart-title-text">
+            {!! nl2br(e($blogs->title)) !!}
+        </p>
         {{-- 画像投稿がある時のみ画像を表示 --}}
         @if ($blogs->image_path !== null)
             <a href="#" data-toggle="modal" data-target="#imageModal">
@@ -40,8 +42,9 @@
         @endif
         <div style="overflow: auto; max-height: 300px;">
             <h4 class="mt-4 smart-header-display">詳細説明</h4>
-            <pre class="detail-text smart-detail-text">{{ $blogs->content }}</pre>
-
+            <p class="detail-text smart-detail-text">
+                {!! nl2br(e($blogs->content)) !!}
+            </p>
         </div>
     </div>
 </div>
@@ -89,7 +92,9 @@
                     <p class="small-text side-text">{{ $photo_id }}.</p>
                     <p class="small-text side-text">回答者返答日：</p>
                     <p class="small-text side-text">{{$reply->created_at}}</p>
-                    <pre class="reply-text smart-reply-text">{{$reply->content}}</pre>
+                    <p class="reply-text smart-reply-text">
+                        {!! nl2br(e($reply->content)) !!}
+                    </p>
                 </div>
             {{-- 画像登録 --}}
             @if ($reply->image_path !== null)
@@ -121,16 +126,20 @@
         </div>
     </div>
 </div>
-<!-- 投稿画像をタップしたときモーダル表示する -->
+
 <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel1">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-body text-center">
-                <img src="{{ asset('storage/' . $blogs->image_path) }}" alt="Image" class="center-image" id="modalImage1" width="100%">
+                <div class="image-container">
+                    <span class="closs-mark-button" data-dismiss="modal">&times;</span>
+                    <img src="{{ asset('storage/' . $blogs->image_path) }}" alt="Image" class="center-image" id="modalImage1" width="100%">
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 <!-- 返信で添付された画像をタップしたときモーダル表示する -->
 @isset($reply)
     @foreach ($replies as $reply)
@@ -141,7 +150,10 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-body text-center">
-                        <img src="{{ asset('storage/' . $reply->image_path) }}" alt="Image" class="center-image" id="modalImage{{ $photo_id }}" width="100%">
+                        <div class="image-container">
+                            <span class="closs-mark-button" data-dismiss="modal">&times;</span>
+                            <img src="{{ asset('storage/' . $reply->image_path) }}" alt="Image" class="center-image" id="modalImage{{ $photo_id }}" width="100%">
+                        </div>
                     </div>
                 </div>
             </div>

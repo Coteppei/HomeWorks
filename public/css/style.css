@@ -33,6 +33,23 @@
     cursor: pointer;
 }
 
+/* モーダル画面×マークで閉じる */
+.image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.closs-mark-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #000000; /* 背景色やスタイルを調整 */
+    padding: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    color: #ffffff;
+}
 
 /* ログイン画面 */
 .login-container {
