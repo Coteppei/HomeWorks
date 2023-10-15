@@ -41,14 +41,16 @@
 
 .closs-mark-button {
     position: absolute;
-    top: 0;
+    width: 30px;
     right: 0;
-    background-color: #000000; /* 背景色やスタイルを調整 */
+    background-color: #000000;
     padding: 5px;
     cursor: pointer;
     font-size: 20px;
     line-height: 1;
     color: #ffffff;
+    opacity: 0.4;
+    border-radius: 50%;
 }
 
 /* ログイン画面 */
