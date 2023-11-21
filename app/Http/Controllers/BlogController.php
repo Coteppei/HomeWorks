@@ -37,7 +37,7 @@ class BlogController extends Controller{
         if (session()->has('user_search_flg')) {
             $blogs ->where('login_user_id', session('id'));
         }
-        $blogs = $blogs->simplePaginate(10);
+        $blogs = $blogs->Paginate(10);
         return view('blog.list', ['blogs' => $blogs]);
     }
     /**
@@ -86,13 +86,13 @@ class BlogController extends Controller{
     public function userSearch()
     {
         if(session('user_name') === 'ユーザー未登録') {
-            $blogs = DB::table('blogs')->orderBy('created_at', 'desc')->simplepaginate(10);
+            $blogs = DB::table('blogs')->orderBy('created_at', 'desc')->Paginate(10);
         } else {
             session()->put('user_search_flg', '1');
             $blogs = DB::table('blogs')
             ->where('login_user_id', session('id'))
             ->orderBy('created_at', 'desc')
-            ->simplePaginate(10);
+            ->Paginate(10);
         }
         return view('blog.list', ['blogs' => $blogs]);
     }
@@ -108,7 +108,7 @@ class BlogController extends Controller{
         if (session()->has('user_search_flg')) {
             session()->forget('user_search_flg');
         }
-        $blogs = DB::table('blogs')->orderBy('created_at', 'desc')->simplepaginate(10);
+        $blogs = DB::table('blogs')->orderBy('created_at', 'desc')->Paginate(10);
         return view('blog.list', ['blogs' => $blogs]);
     }
 
@@ -147,11 +147,11 @@ class BlogController extends Controller{
         if (session()->has('user_search_flg')) {
             $blogs = $query->where('login_user_id', session('id'))
                 ->orderBy('created_at', 'desc')
-                ->simplepaginate(10);
+                ->Paginate(10);
         } else {
             $blogs = $query
                 ->orderBy('created_at', 'desc')
-                ->simplepaginate(10);
+                ->Paginate(10);
         }
         // 宿題と検索キーワードをページネーション用に取得
         return view('blog.list', ['blogs' => $blogs, 'keyword' => $keyword]);

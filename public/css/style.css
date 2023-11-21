@@ -164,3 +164,47 @@ html {
 .text-resolve {
     color: #0303ff;
 }
+
+/* ページネーション */
+.all-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+.pagination a {
+    display: block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ccc;
+    transition: all 0.3s;
+}
+.pagination p {
+    display: block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    margin-bottom: 0px;
+    text-align: center;
+    color: #ffffff;
+    border: 1px solid #ccc;
+    background-color: #0e00cf;
+    cursor: pointer;
+}
+.pagination a:hover {
+    background-color: #0898ff;
+    color: #fff;
+}
+@media (min-width: 767px) {
+    .PC-detail-img {
+        margin-right: 80px;
+    }
+    /* スマホ画面のみの表示クラスを消す */
+    .SP-display {
+        display: none;
+    }
+}

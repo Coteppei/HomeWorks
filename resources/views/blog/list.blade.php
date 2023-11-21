@@ -123,13 +123,26 @@
 </div>
 
 {{-- ページネーション表示 検索の有無で条件分岐 --}}
-<div class="mb-5">
-    @isset($keyword)
-        {{ $blogs->appends(['search' => $keyword])->links() }}
-    @else
-        {{ $blogs->links() }}
-    @endisset
+<div class="all-pagination mb-5">
+    @if($blogs->currentPage() > 1)
+        <a href="?{{ isset($keyword) ? 'search=' . $keyword . '&' : '' }}page={{ $blogs->currentPage() - 1 }}" class="PC-display mr-4">≪前のページへ</a>
+        <a href="?{{ isset($keyword) ? 'search=' . $keyword . '&' : '' }}page={{ $blogs->currentPage() - 1 }}" class="SP-display mr-4">≪前へ</a>
+    @endif
+    <div class="pagination">
+        @for($page = 1; $page <= $blogs->lastPage(); $page++)
+            @if($page == $blogs->currentPage())
+                <p>{{ $page }}</p>
+            @else
+                <a href="?{{ isset($keyword) ? 'search=' . $keyword . '&' : '' }}page={{ $page }}">{{ $page }}</a>
+            @endif
+        @endfor
+    </div>
+    @if($blogs->currentPage() < $blogs->lastPage())
+        <a href="?{{ isset($keyword) ? 'search=' . $keyword . '&' : '' }}page={{ $blogs->currentPage() + 1 }}" class="PC-display ml-4">次のページへ≫</a>
+        <a href="?{{ isset($keyword) ? 'search=' . $keyword . '&' : '' }}page={{ $blogs->currentPage() + 1 }}" class="SP-display ml-4">次へ≫</a>
+    @endif
 </div>
+
 <p id="scrollButton" class="scroll-button" ><a href="#"><img class="scroll-image" src="{{asset('upScroll.png')}}" alt=""></a></p>
 
 @endsection

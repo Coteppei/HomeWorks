@@ -21,6 +21,10 @@
     .smart-reply-text {
         font-size: 17px;
     }
+    /* PC画面のみの表示クラスを消す */
+    .PC-display {
+        display: none;
+    }
 }
 
 /* さらに狭幅 */
